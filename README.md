@@ -1,0 +1,198 @@
+# bigvoice
+
+**A small model. A big voice.** Native, offline dictation for macOS. Hold a
+shortcut in any app, speak, and your words land where your cursor is. Speech
+recognition runs entirely on your Mac: no account, no cloud, no subscription.
+
+![Dictation, listening](design/renders/dictation-listening.png)
+
+- **Two engines, one app.** whisper.cpp (Metal) for Whisper GGML models, and
+  ONNX Runtime GenAI (CPU) for streaming Nemotron Speech models.
+- **Reuses what you already have.** bigvoice finds speech models already on
+  your Mac, including the one the GitHub Copilot app downloads for voice, and
+  uses them in place. Nothing is copied or downloaded twice.
+- **Live transcript.** Words appear while you speak: Nemotron streams
+  incrementally; Whisper re-transcribes on a relaxed cadence. The final pass
+  after you stop is always authoritative.
+- **Works in any app**, from the menu bar, with a floating capsule that never
+  takes focus and resizes to what it has to say.
+
+Requires macOS 14 or later on Apple Silicon.
+
+## Install
+
+Download `bigvoice-<version>-macos-arm64.zip` from Releases, unzip, and move
+`bigvoice.app` to **Applications**. Open it and allow **Microphone** and
+**Accessibility** from the setup steps. bigvoice doesn't need Speech Recognition,
+Input Monitoring, or Full Disk Access.
+
+The release package is signed with an Apple Development certificate and is not
+notarized. On a Mac other than the one that built it, macOS blocks the first
+launch: open **System Settings › Privacy & Security** and choose **Open Anyway**.
+For wide distribution, build with a Developer ID identity and notarize (below).
+
+### If Accessibility looks on but bigvoice says it's off
+
+macOS ties Accessibility approval to an app's code signature. After replacing a
+build signed differently (for example, an early ad-hoc build), System Settings
+still shows bigvoice switched on while macOS reports it untrusted. Press
+**Repair** in bigvoice's setup step (or Settings › Permissions): it clears only
+bigvoice's stale record and reopens the prompt so you can switch it on again.
+Manual equivalent: select bigvoice in **Privacy & Security › Accessibility**,
+click **−**, then press **Allow** in bigvoice. Builds signed with the same
+identity keep the approval across updates.
+
+## Dictation
+
+| Control | Default |
+| --- | --- |
+| Push to talk | Hold **⌃ ⌥ Space**, release to insert |
+| Hands-free | **⌃ ⌥ Return** to start, again to finish |
+| Cancel | **Esc** while dictation is active |
+| Automatically press Return | Off |
+| Start and stop cues | On, independently switchable (toggling one on plays it) |
+| Input device | System default, or any specific microphone |
+
+Click into a text field in any app, then use a shortcut. Change either shortcut
+in **Settings** by clicking it and pressing a new combination; held modifiers
+appear as keycaps, invalid combinations shake, and conflicts are explained.
+**Try it here** practices inside bigvoice without pasting or sending anything.
+
+Closing or minimizing the window keeps bigvoice running in the menu bar; quit
+from its menu. The capsule, the sidebar mark, and the menu bar glyph all follow
+one state: a quiet dot, five live bars while listening, travelling dots while
+the model works, a caret as words land, then a check.
+
+Models load while the microphone is already live, so a cold model never delays
+the moment you start speaking. Recordings stop at ten minutes; idle models leave
+memory after five. Sleep cancels an active recording.
+
+### Text insertion and sending
+
+bigvoice pastes into the original foreground app using Accessibility and
+keyboard events. It verifies the app, window, focused element, text, and
+selection where the app exposes them; changing focus or editing the field while
+dictating prevents insertion rather than sending words somewhere unintended.
+Secure input and password fields are never filled.
+
+**Automatically press Return** is opt-in: Return can send messages or run
+terminal commands, so bigvoice presses it only after confirming the expected
+text landed in the original field. Apps that don't expose editable text get a
+best-effort paste, no Return, and the transcript stays in bigvoice to copy.
+
+Clipboard restoration is on by default and never overwrites a newer copy. The
+app never logs transcript content.
+
+## Models
+
+![Models](design/renders/models-full.png)
+
+At launch and before any install, bigvoice looks in: GitHub Copilot's model
+cache (`~/.github-copilot-cli/cache/models`), MacWhisper, superwhisper,
+VoiceInk, Handy, whisper.cpp and Hugging Face caches (including relocated
+`HF_HOME`, `HF_HUB_CACHE`, `HUGGINGFACE_HUB_CACHE`, `XDG_CACHE_HOME`,
+`WHISPER_CPP_MODEL_DIR`), `~/Models`, Downloads, and Spotlight's local index.
+Use **Search a folder** or **Add model file** for anything else. Discovery is
+read-only and bounded, and reports where it had to stop.
+
+| Format | Engine | Notes |
+| --- | --- | --- |
+| Whisper GGML `.bin` | whisper.cpp 1.8.3, Metal | Validated from the GGML header, not the file name |
+| Nemotron Speech ONNX bundle (`genai_config.json` + graphs) | ONNX Runtime GenAI 0.16.0, CPU | English; streaming; verified with Copilot's `nemotron-speech-streaming-en-0.6b` |
+
+ONNX bundles are validated before use: supported architecture, 16 kHz audio,
+every referenced component present, no references outside the folder, and no
+options that load native code, write files, or require other hardware. Anything
+bigvoice can't run is listed under **Also found** with the specific reason.
+MLX/Safetensors, PyTorch, Core ML, and GGUF weights are recognized but not run.
+
+The catalog offers five MIT-licensed Whisper models (32 MB to 190 MB). Install
+is one click: reuse check, disk-space check, download from a pinned Hugging Face
+revision, byte-count and SHA-256 verification, atomic install, load, select.
+Downloads live in `~/Library/Application Support/bigvoice/Models`; only those
+can be removed from bigvoice, after confirmation. Other apps' files are never
+modified or deleted.
+
+## Privacy
+
+Audio is held in memory and discarded after each transcription. The latest
+transcript lives in memory until you clear it or quit. There's no telemetry,
+account, or cloud transcription; ONNX Runtime telemetry is disabled before the
+runtime can initialize. Only model installation touches the network.
+Preferences and paths to reused models are stored in `UserDefaults`
+(`com.bigvoice.mac`). The app isn't sandboxed because inserting text into other
+apps and reusing model files elsewhere on disk require it.
+
+## Design
+
+The interface implements the **bigvoice brand & interface system V2** in
+[`design/brand-v2`](design/brand-v2): warm dark, one loud color ("if something
+is orange, something is listening"), Bricolage Grotesque for display, Geist for
+interface, Geist Mono for data, and three motion curves with no bounce. See
+[`DESIGN.md`](DESIGN.md) for tokens and component rules. The open `.dc.html`
+spec files need the design tool's runtime (`support.js`), which isn't
+redistributed here.
+
+## Build
+
+Requires Apple's Command Line Tools with Swift 6 or later.
+
+```sh
+./scripts/build-app.sh
+```
+
+This verifies the pinned fonts and fetches checksum-pinned ONNX Runtime
+libraries (`scripts/bootstrap-onnx.py`, never model weights), builds a release,
+assembles `dist/bigvoice.app` with its native runtimes, fonts, icon, and license
+notices, signs it, and writes `dist/bigvoice-<version>-macos-arm64.zip`.
+
+Signing uses the first **Developer ID Application** or **Apple Development**
+identity in your keychain (hardened runtime), so privacy approvals survive
+rebuilds; without one it signs ad hoc. Override with
+`CODESIGN_IDENTITY="Developer ID Application: …"`, then notarize with your own
+credentials to distribute. Don't disable Gatekeeper.
+
+## Verify
+
+```sh
+swift build
+swift run bigvoice-tests
+swift run bigvoice-check scan
+.build/debug/bigvoice --check-native
+.build/debug/bigvoice --render-previews /tmp/bigvoice-previews
+```
+
+The regression runner needs only Command Line Tools and covers shortcut rules,
+session lifecycle, silence, GGML headers, ONNX bundle validation (unsafe
+references, native-code options, missing components, revision changes),
+discovery deduplication and Copilot-cache reuse, checksums, and
+insertion/send/clipboard safety. Real inference, including live streaming, runs
+when you provide fixtures:
+
+```sh
+BIGVOICE_TEST_MODEL=/path/to/ggml-model.bin \
+BIGVOICE_TEST_ONNX_MODEL=~/.github-copilot-cli/cache/models/Microsoft/nemotron-speech-streaming-en-0.6b-generic-cpu-3/v3 \
+BIGVOICE_TEST_AUDIO=/path/to/speech.wav \
+BIGVOICE_TEST_PHRASE="a phrase in that recording" \
+swift run bigvoice-tests
+```
+
+To check the exact shipped bundle, transcribe a file with its own engines:
+
+```sh
+dist/bigvoice.app/Contents/MacOS/bigvoice --transcribe /path/to/model /path/to/speech.wav
+```
+
+Microphone capture and insertion into other apps still deserve a hands-on check
+on each Mac: try both shortcuts, a device change, the cues, cancel, and your
+usual apps before turning on automatic Return.
+
+## Layout
+
+- `BigvoiceCore`: model catalog, GGML and ONNX inspection, discovery, preferences, lifecycle, safety rules.
+- `BigvoiceRuntime`: engine router, whisper.cpp actor, ONNX Runtime GenAI binding and streaming sessions, verified installer, audio conversion.
+- `Bigvoice`: AppKit lifecycle, capture and level meter, Carbon shortcuts, Accessibility insertion, SwiftUI interface, capsule, menu bar glyph.
+- `BigvoiceCheck`: read-only discovery and offline transcription diagnostics.
+- `Tests/BigvoiceTests`: dependency-free regression runner.
+- `scripts/`: app packaging, ONNX bootstrap, icon generator.
+- `Resources/`: Info.plist, entitlements, pinned fonts with checksums, license notices, ONNX runtime lock.

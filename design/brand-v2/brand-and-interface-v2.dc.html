@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+html,body{margin:0;background:oklch(0.155 0.006 60);color:oklch(0.965 0.008 80);font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:oklch(0.76 0.17 52);text-decoration:none}a:hover{color:oklch(0.965 0.008 80)}
+::selection{background:oklch(0.76 0.17 52);color:oklch(0.155 0.006 60)}
+</style>
+</helmet>
+<div style="max-width:1320px;margin:0 auto;padding:0 clamp(20px,4vw,56px) 120px;display:flex;flex-direction:column;gap:clamp(96px,12vw,160px)">
+
+  <header data-screen-label="Hero" style="display:flex;flex-direction:column;gap:clamp(40px,6vw,72px);padding-top:28px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div>{{ markHeroSmall }}</div>
+        <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.03em;font-stretch:88%">bigvoice</div>
+      </div>
+      <div style="display:flex;gap:28px;font:500 12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70);letter-spacing:.06em;flex-wrap:wrap">
+        <div>BRAND &amp; INTERFACE SYSTEM</div><div>V2 · 2026</div><a href="bigvoice%20Current.dc.html">← CURRENT UI</a>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <div style="overflow-x:clip;overflow-y:visible">
+        <div data-hw="1" style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(84px,18.5vw,252px);line-height:1.04;letter-spacing:-.05em;font-variation-settings:'wght' 600,'wdth' 90,'opsz' 96;white-space:nowrap">bigvoice</div>
+      </div>
+      <div style="height:84px;display:flex;align-items:center;gap:4px">
+        <sc-for list="{{ hmBars }}" as="b" hint-placeholder-count="72"><div data-hm="1" style="flex:1;min-width:2px;height:6%;border-radius:99px;background:oklch(0.76 0.17 52);transition:height .1s linear"></div></sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:32px 64px;justify-content:space-between;align-items:flex-end">
+      <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(32px,4.4vw,56px);font-weight:600;letter-spacing:-.035em;line-height:1;font-stretch:90%;max-width:640px;text-wrap:balance">A small model.<br>A big voice.</div>
+      <div style="display:flex;flex-direction:column;gap:20px;max-width:420px">
+        <div style="font-size:16px;line-height:1.6;color:oklch(0.72 0.012 70);text-wrap:pretty">Native, offline dictation for macOS. Whisper runs on this Mac — no account, no cloud, no subscription. The wordmark above swells with the voice it hears.</div>
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div onClick="{{ toggleMic }}" style="display:flex;align-items:center;gap:10px;padding:11px 18px 11px 14px;border-radius:99px;border:1px solid rgba(255,240,220,.16);cursor:pointer;font-size:13.5px;font-weight:500;transition:background .3s ease,border-color .3s ease" style-hover="background:rgba(255,240,220,.06);border-color:rgba(255,240,220,.3)">
+            <div>{{ micIcon }}</div><div>{{ micLabel }}</div>
+          </div>
+          <div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">{{ micNote }}</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="mark" data-screen-label="01 Mark" style="display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-wrap:wrap;gap:24px 64px;align-items:flex-end;justify-content:space-between;padding-bottom:28px;border-bottom:1px solid rgba(255,240,220,.1)">
+      <div style="display:flex;flex-direction:column;gap:14px"><div style="font:500 12px 'Geist Mono',monospace;color:oklch(0.76 0.17 52);letter-spacing:.08em">01 — MARK</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:650;letter-spacing:-.035em;line-height:.95;font-stretch:88%">One shape. Every state.</div></div>
+      <div style="max-width:460px;font-size:15px;line-height:1.6;color:oklch(0.72 0.012 70);text-wrap:pretty">The dot is a closed mouth: quiet, ready. It opens into five bars that follow the real microphone level, folds into dots while Whisper works, narrows to a caret as words land, then closes into a check.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px">
+      <div style="position:relative;aspect-ratio:1/1;max-height:560px;border-radius:28px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08);display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,240,220,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,240,220,.045) 1px,transparent 1px);background-size:24px 24px;background-position:center"></div>
+        <div style="position:relative">{{ markShow }}</div>
+        <div style="position:absolute;left:24px;bottom:22px;font:500 12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70);letter-spacing:.06em">{{ mkLabel }}</div>
+        <div style="position:absolute;right:24px;bottom:22px;font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">bar .11 · gap .085 · dot .38</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ mkStates }}" as="s" hint-placeholder-count="6">
+          <div onClick="{{ s.pick }}" style="display:flex;align-items:center;gap:22px;padding:14px 20px 14px 14px;border-radius:20px;cursor:pointer;background:{{ s.bg }};border:1px solid {{ s.bc }};transition:background .35s ease,border-color .35s ease" style-hover="border-color:rgba(255,240,220,.22)">
+            <div style="width:64px;height:64px;border-radius:14px;background:oklch(0.155 0.006 60);display:flex;align-items:center;justify-content:center;flex:none">{{ s.mark }}</div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">
+              <div style="font-size:16px;font-weight:600;letter-spacing:-.01em">{{ s.label }}</div>
+              <div style="font-size:13px;color:oklch(0.72 0.012 70);line-height:1.45">{{ s.note }}</div>
+            </div>
+            <div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">{{ s.num }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="color" data-screen-label="02 Color" style="display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-wrap:wrap;gap:24px 64px;align-items:flex-end;justify-content:space-between;padding-bottom:28px;border-bottom:1px solid rgba(255,240,220,.1)">
+      <div style="display:flex;flex-direction:column;gap:14px"><div style="font:500 12px 'Geist Mono',monospace;color:oklch(0.76 0.17 52);letter-spacing:.08em">02 — COLOR</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:650;letter-spacing:-.035em;line-height:.95;font-stretch:88%">Warm dark. One loud color.</div></div>
+      <div style="max-width:460px;font-size:15px;line-height:1.6;color:oklch(0.72 0.012 70);text-wrap:pretty">Ink and paper carry the interface. Signal is reserved for sound and the one action that starts it. If something is orange, something is listening.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px">
+      <div style="grid-column:span 2;min-height:260px;border-radius:24px;background:oklch(0.76 0.17 52);color:oklch(0.155 0.006 60);padding:24px;display:flex;flex-direction:column;justify-content:space-between">
+        <div style="display:flex;justify-content:space-between;font:500 12px 'Geist Mono',monospace"><div>SIGNAL</div><div>oklch .76 .17 52</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px"><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:44px;font-weight:700;letter-spacing:-.04em;line-height:1">Sound is on.</div><div style="font-size:13px;font-weight:500">Listening states · primary action · delivered</div></div>
+      </div>
+      <sc-for list="{{ swatches }}" as="c" hint-placeholder-count="6">
+        <div style="min-height:260px;border-radius:24px;background:{{ c.v }};color:{{ c.fg }};border:1px solid rgba(255,240,220,.08);padding:20px;display:flex;flex-direction:column;justify-content:space-between">
+          <div style="font:500 12px 'Geist Mono',monospace">{{ c.name }}</div>
+          <div style="display:flex;flex-direction:column;gap:4px"><div style="font-size:13px;font-weight:500">{{ c.role }}</div><div style="font:11.5px 'Geist Mono',monospace;opacity:.8">{{ c.code }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="type" data-screen-label="03 Type" style="display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-wrap:wrap;gap:24px 64px;align-items:flex-end;justify-content:space-between;padding-bottom:28px;border-bottom:1px solid rgba(255,240,220,.1)">
+      <div style="display:flex;flex-direction:column;gap:14px"><div style="font:500 12px 'Geist Mono',monospace;color:oklch(0.76 0.17 52);letter-spacing:.08em">03 — TYPE</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:650;letter-spacing:-.035em;line-height:.95;font-stretch:88%">Type that raises its voice.</div></div>
+      <div style="max-width:460px;font-size:15px;line-height:1.6;color:oklch(0.72 0.012 70);text-wrap:pretty">Bricolage Grotesque for display — its weight axis tracks loudness. Geist for interface text. Geist Mono for shortcuts, timers, and file sizes.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px">
+      <div style="border-radius:24px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08);padding:28px;display:flex;flex-direction:column;justify-content:space-between;min-height:400px;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;font:500 12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)"><div>DISPLAY · BRICOLAGE GROTESQUE</div><div>wght <span data-hwn="1">600</span></div></div>
+        <div data-hw="1" style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(140px,16vw,220px);line-height:.8;letter-spacing:-.05em;font-variation-settings:'wght' 600,'wdth' 90,'opsz' 96">Aa</div>
+        <div style="font-size:13px;color:oklch(0.72 0.012 70)">260 at a whisper · 800 at full voice · width 78–100</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="flex:1;border-radius:24px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08);padding:28px;display:flex;flex-direction:column;gap:18px">
+          <div style="font:500 12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">INTERFACE · GEIST</div>
+          <div style="font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.15">Hold to speak. Release to insert.</div>
+          <div style="font-size:15px;line-height:1.6;color:oklch(0.72 0.012 70);text-wrap:pretty">Audio is held in memory only and discarded after transcription. There are no accounts, analytics, or cloud transcription requests.</div>
+        </div>
+        <div style="border-radius:24px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08);padding:28px;display:flex;flex-direction:column;gap:18px">
+          <div style="font:500 12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">DATA · GEIST MONO</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <div style="font:500 15px 'Geist Mono',monospace;min-width:40px;height:40px;padding:0 12px;border-radius:10px;background:oklch(0.235 0.008 60);border:1px solid rgba(255,240,220,.1);box-shadow:0 3px 0 rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center">⌃</div>
+            <div style="font:500 15px 'Geist Mono',monospace;min-width:40px;height:40px;padding:0 12px;border-radius:10px;background:oklch(0.235 0.008 60);border:1px solid rgba(255,240,220,.1);box-shadow:0 3px 0 rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center">⌥</div>
+            <div style="font:500 15px 'Geist Mono',monospace;min-width:40px;height:40px;padding:0 16px;border-radius:10px;background:oklch(0.235 0.008 60);border:1px solid rgba(255,240,220,.1);box-shadow:0 3px 0 rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center">Space</div>
+            <div style="flex:1"></div>
+            <div style="font:500 22px 'Geist Mono',monospace;color:oklch(0.76 0.17 52)">0:04</div>
+            <div style="font:500 22px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">59.7 MB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="motion" data-screen-label="04 Motion" style="display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-wrap:wrap;gap:24px 64px;align-items:flex-end;justify-content:space-between;padding-bottom:28px;border-bottom:1px solid rgba(255,240,220,.1)">
+      <div style="display:flex;flex-direction:column;gap:14px"><div style="font:500 12px 'Geist Mono',monospace;color:oklch(0.76 0.17 52);letter-spacing:.08em">04 — MOTION</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:650;letter-spacing:-.035em;line-height:.95;font-stretch:88%">Moves like speech.</div></div>
+      <div style="max-width:460px;font-size:15px;line-height:1.6;color:oklch(0.72 0.012 70);text-wrap:pretty">Three curves, no bounce. Fast in, soft landing. Nothing loops in the product unless sound is present — the bars are the microphone, never a screensaver.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;border-radius:24px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08);overflow:hidden">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px 40px;padding:26px 28px">
+        <div style="width:230px;display:flex;flex-direction:column;gap:4px"><div style="font-size:17px;font-weight:600">Swell</div><div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">560ms · (.2,.8,.2,1) · stagger 28ms</div></div>
+        <div style="flex:1;min-width:220px;position:relative;height:20px"><div style="position:absolute;left:0;right:0;top:9px;height:2px;background:rgba(255,240,220,.1);border-radius:2px"></div><div style="position:absolute;top:0;left:{{ moX }};width:20px;height:20px;border-radius:10px;background:oklch(0.76 0.17 52);transition:left .56s cubic-bezier(.2,.8,.2,1)"></div></div>
+        <div style="width:200px;font-size:13px;color:oklch(0.72 0.012 70)">The mark, state changes</div>
+      </div>
+      <div style="height:1px;background:rgba(255,240,220,.07)"></div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px 40px;padding:26px 28px">
+        <div style="width:230px;display:flex;flex-direction:column;gap:4px"><div style="font-size:17px;font-weight:600">Settle</div><div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">340ms · (.3,.7,.4,1)</div></div>
+        <div style="flex:1;min-width:220px;position:relative;height:20px"><div style="position:absolute;left:0;right:0;top:9px;height:2px;background:rgba(255,240,220,.1);border-radius:2px"></div><div style="position:absolute;top:0;left:{{ moX }};width:20px;height:20px;border-radius:10px;background:oklch(0.965 0.008 80);transition:left .34s cubic-bezier(.3,.7,.4,1)"></div></div>
+        <div style="width:200px;font-size:13px;color:oklch(0.72 0.012 70)">Pages, panels, toggles</div>
+      </div>
+      <div style="height:1px;background:rgba(255,240,220,.07)"></div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px 40px;padding:26px 28px">
+        <div style="width:230px;display:flex;flex-direction:column;gap:4px"><div style="font-size:17px;font-weight:600">Hush</div><div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">180ms · (.4,0,1,1)</div></div>
+        <div style="flex:1;min-width:220px;position:relative;height:20px"><div style="position:absolute;left:0;right:0;top:9px;height:2px;background:rgba(255,240,220,.1);border-radius:2px"></div><div style="position:absolute;top:0;left:{{ moX }};width:20px;height:20px;border-radius:10px;background:oklch(0.72 0.012 70);transition:left .18s cubic-bezier(.4,0,1,1)"></div></div>
+        <div style="width:200px;font-size:13px;color:oklch(0.72 0.012 70)">Cancel, dismiss, Esc</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="icons" data-screen-label="05 Icons" style="display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-wrap:wrap;gap:24px 64px;align-items:flex-end;justify-content:space-between;padding-bottom:28px;border-bottom:1px solid rgba(255,240,220,.1)">
+      <div style="display:flex;flex-direction:column;gap:14px"><div style="font:500 12px 'Geist Mono',monospace;color:oklch(0.76 0.17 52);letter-spacing:.08em">05 — ICONS</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:650;letter-spacing:-.035em;line-height:.95;font-stretch:88%">Icons that answer back.</div></div>
+      <div style="max-width:460px;font-size:15px;line-height:1.6;color:oklch(0.72 0.012 70);text-wrap:pretty">Built from the mark's own parts — capsules, dots, rings — on a 24-unit grid with a 2-unit stroke. Each has exactly one gesture. Hover to play.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+      <sc-for list="{{ iconTiles }}" as="t" hint-placeholder-count="10">
+        <div onMouseEnter="{{ t.enter }}" onMouseLeave="{{ t.leave }}" style="aspect-ratio:1/1;border-radius:22px;background:oklch(0.235 0.008 60);border:1px solid {{ t.bc }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;position:relative;cursor:default;transition:border-color .35s ease">
+          <div>{{ t.icon }}</div>
+          <div style="position:absolute;left:18px;bottom:16px;font:500 12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">{{ t.label }}</div>
+          <div style="position:absolute;right:18px;top:16px;width:6px;height:6px;border-radius:3px;background:oklch(0.76 0.17 52);opacity:{{ t.dot }};transition:opacity .3s ease"></div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="app" data-screen-label="06 Interface" style="display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-wrap:wrap;gap:24px 64px;align-items:flex-end;justify-content:space-between;padding-bottom:28px;border-bottom:1px solid rgba(255,240,220,.1)">
+      <div style="display:flex;flex-direction:column;gap:14px"><div style="font:500 12px 'Geist Mono',monospace;color:oklch(0.76 0.17 52);letter-spacing:.08em">06 — INTERFACE</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:650;letter-spacing:-.035em;line-height:.95;font-stretch:88%">The app, tuned to the voice.</div></div>
+      <div style="max-width:460px;font-size:15px;line-height:1.6;color:oklch(0.72 0.012 70);text-wrap:pretty">Press <b style="color:oklch(0.965 0.008 80);font-weight:600">Try it here</b>, Esc to cancel, or switch pages. The sidebar mark, menu bar glyph, and floating capsule all follow one state.</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;border-radius:16px;overflow:hidden;border:1px solid rgba(255,240,220,.1);box-shadow:0 40px 120px rgba(0,0,0,.55)">
+      <div style="height:30px;background:oklch(0.12 0.005 60);display:flex;align-items:center;gap:22px;padding:0 16px;font-size:13px;border-bottom:1px solid rgba(255,240,220,.06)">
+        <div style="font-weight:700"></div><div style="font-weight:600">bigvoice</div><div style="color:oklch(0.72 0.012 70)">File</div><div style="color:oklch(0.72 0.012 70)">Edit</div><div style="color:oklch(0.72 0.012 70)">Window</div>
+        <div style="flex:1"></div>
+        <div style="display:flex;align-items:center;justify-content:center;width:28px;height:22px;border-radius:5px;background:{{ mbBg }};transition:background .3s ease">{{ markMenu }}</div>
+        <div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">Fri 25 Sep 9:41</div>
+      </div>
+
+      <div style="display:flex;height:780px;background:oklch(0.155 0.006 60)">
+        <div style="width:236px;flex:none;background:oklch(0.2 0.007 60);border-right:1px solid rgba(255,240,220,.07);display:flex;flex-direction:column;padding:18px 14px 20px">
+          <div style="display:flex;gap:8px;padding:0 6px"><div style="width:12px;height:12px;border-radius:6px;background:#ff5f57"></div><div style="width:12px;height:12px;border-radius:6px;background:#febc2e"></div><div style="width:12px;height:12px;border-radius:6px;background:#28c840"></div></div>
+          <div style="display:flex;align-items:center;gap:10px;padding:34px 8px 30px">
+            <div>{{ markSide }}</div>
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:23px;font-weight:700;letter-spacing:-.035em;font-stretch:88%">bigvoice</div>
+          </div>
+          <div style="position:relative;display:flex;flex-direction:column;gap:4px">
+            <div style="position:absolute;left:0;right:0;top:{{ navY }};height:42px;border-radius:12px;background:rgba(255,240,220,.07);transition:top .45s cubic-bezier(.2,.8,.2,1)"></div>
+            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="3">
+              <div onClick="{{ n.go }}" onMouseEnter="{{ n.enter }}" onMouseLeave="{{ n.leave }}" style="position:relative;height:42px;display:flex;align-items:center;gap:12px;padding:0 12px;border-radius:12px;cursor:pointer;color:{{ n.col }};transition:color .3s ease">
+                <div>{{ n.icon }}</div>
+                <div style="flex:1;font-size:13.5px;font-weight:{{ n.fw }}">{{ n.label }}</div>
+                <div style="width:5px;height:5px;border-radius:3px;background:oklch(0.76 0.17 52);opacity:{{ n.dot }};transition:opacity .3s ease"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:1"></div>
+          <div style="display:flex;flex-direction:column;gap:14px;padding:16px;border-radius:16px;background:oklch(0.155 0.006 60);border:1px solid rgba(255,240,220,.07)">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;align-items:center;gap:8px"><div style="width:6px;height:6px;border-radius:3px;background:oklch(0.76 0.17 52)"></div><div style="font-size:12.5px;font-weight:600">Whisper Base Q5</div></div>
+              <div style="font:11.5px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">English · 59.7 MB</div>
+            </div>
+            <div style="height:1px;background:rgba(255,240,220,.08)"></div>
+            <div style="display:flex;align-items:flex-start;gap:10px"><div style="padding-top:1px">{{ icLockSide }}</div><div style="font-size:12px;color:oklch(0.72 0.012 70);line-height:1.5">On your Mac.<br>Off the cloud.</div></div>
+          </div>
+        </div>
+
+        <div ref="{{ contentRef }}" style="flex:1;min-width:0;overflow:auto">
+          <div style="display:grid;max-width:880px;padding:44px clamp(24px,4vw,48px) 48px">
+
+            <div style="grid-area:1/1;opacity:{{ pgD.o }};transform:translateY({{ pgD.y }});pointer-events:{{ pgD.pe }};transition:opacity .34s cubic-bezier(.3,.7,.4,1),transform .34s cubic-bezier(.3,.7,.4,1);display:flex;flex-direction:column;gap:28px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                <div style="display:flex;align-items:center;gap:9px;padding:7px 12px 7px 10px;border-radius:99px;background:rgba(255,240,220,.05);border:1px solid rgba(255,240,220,.08)">
+                  <div style="width:7px;height:7px;border-radius:4px;background:{{ stDot }};box-shadow:0 0 0 {{ stGlow }} oklch(0.76 0.17 52 / .25);transition:background .3s ease,box-shadow .4s ease"></div>
+                  <div style="font-size:12px;font-weight:500;color:oklch(0.72 0.012 70)">{{ stLabel }}</div>
+                </div>
+                <div style="font:500 11.5px 'Geist Mono',monospace;color:oklch(0.72 0.012 70);letter-spacing:.05em">{{ modeTag }}</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:grid">
+                  <sc-for list="{{ titles }}" as="ti" hint-placeholder-count="1">
+                    <div style="grid-area:1/1;font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(32px,3.6vw,46px);font-weight:620;letter-spacing:-.035em;line-height:1.02;font-stretch:90%;opacity:{{ ti.o }};filter:{{ ti.f }};transform:translateY({{ ti.y }});transition:opacity .45s ease,filter .45s ease,transform .56s cubic-bezier(.2,.8,.2,1)">{{ ti.text }}</div>
+                  </sc-for>
+                </div>
+                <div style="font-size:15px;color:oklch(0.72 0.012 70)">Dictate into the apps you already use. Your audio stays on this Mac.</div>
+              </div>
+
+              <div style="border-radius:26px;background:oklch(0.2 0.007 60);border:1px solid {{ stageBc }};padding:26px;display:flex;flex-direction:column;gap:22px;transition:border-color .5s ease">
+                <div style="display:flex;align-items:center;gap:22px">
+                  <div style="position:relative;width:76px;height:76px;flex:none;display:flex;align-items:center;justify-content:center">
+                    <div data-ring="1" style="position:absolute;inset:0;border-radius:50%;background:oklch(0.76 0.17 52);opacity:.12;transition:transform .12s linear,opacity .2s linear"></div>
+                    <div style="position:absolute;inset:0;border-radius:50%;background:oklch(0.76 0.17 52 / .1)"></div>
+                    <div style="position:relative">{{ markStage }}</div>
+                  </div>
+                  <div style="flex:1;min-width:0;height:64px;display:flex;align-items:center;gap:3px">
+                    <sc-for list="{{ wvBars }}" as="b" hint-placeholder-count="56"><div data-wv="1" style="flex:1;min-width:2px;height:6%;border-radius:99px;background:oklch(0.76 0.17 52);opacity:.35;transition:height .09s linear,opacity .15s linear"></div></sc-for>
+                  </div>
+                  <div style="width:48px;text-align:right;font:500 14px 'Geist Mono',monospace;color:{{ timerCol }};transition:color .3s ease">{{ timer }}</div>
+                </div>
+                <div style="height:1px;background:rgba(255,240,220,.07)"></div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="font:500 11.5px 'Geist Mono',monospace;color:oklch(0.72 0.012 70);letter-spacing:.05em">{{ trLabel }}</div>
+                  <div style="display:grid;min-height:62px">
+                    <div style="grid-area:1/1;font-size:17px;line-height:1.55;color:oklch(0.72 0.012 70);opacity:{{ phO }};transition:opacity .3s ease">Your words appear here as you speak. Practice mode never pastes or sends.</div>
+                    <div style="grid-area:1/1;display:flex;flex-wrap:wrap;column-gap:.3em;row-gap:2px;font-size:19px;line-height:1.55;letter-spacing:-.005em">
+                      <sc-for list="{{ words }}" as="w" hint-placeholder-count="0"><span style="display:inline-block;opacity:{{ w.o }};filter:{{ w.f }};transform:translateY({{ w.y }});color:{{ w.c }};transition:opacity .4s ease,filter .4s ease,transform .5s cubic-bezier(.2,.8,.2,1),color .6s ease">{{ w.w }}</span></sc-for>
+                    </div>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                  <div onClick="{{ primary }}" style="display:flex;align-items:center;gap:10px;height:44px;padding:0 20px 0 16px;border-radius:99px;background:oklch(0.76 0.17 52);color:oklch(0.155 0.006 60);font-size:14px;font-weight:600;cursor:pointer;opacity:{{ priO }};transition:opacity .3s ease,transform .2s ease" style-active="transform:scale(.97)">
+                    <div>{{ priIcon }}</div><div>{{ priLabel }}</div>
+                  </div>
+                  <div onClick="{{ cancel }}" style="display:flex;align-items:center;gap:8px;height:44px;padding:0 18px 0 14px;border-radius:99px;border:1px solid rgba(255,240,220,.16);font-size:14px;font-weight:500;cursor:pointer;opacity:{{ canO }};transform:translateX({{ canX }});pointer-events:{{ canPe }};transition:opacity .25s ease,transform .45s cubic-bezier(.2,.8,.2,1)" style-hover="background:rgba(255,240,220,.06)">
+                    <div>{{ icCancel }}</div><div>Cancel</div>
+                  </div>
+                  <div style="flex:1"></div>
+                  <div style="font:11.5px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">esc cancels</div>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><div style="font-size:17px;font-weight:600;letter-spacing:-.01em">Two ways to get a word in</div><div onClick="{{ goSettings }}" style="font-size:12.5px;color:oklch(0.76 0.17 52);cursor:pointer">Customize</div></div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+                  <div style="border-radius:20px;background:oklch(0.2 0.007 60);border:1px solid {{ pushBc }};padding:20px;display:flex;flex-direction:column;gap:18px;transition:border-color .4s ease">
+                    <div style="display:flex;flex-direction:column;gap:5px"><div style="font-size:14px;font-weight:600">Push to talk</div><div style="font-size:12.5px;color:oklch(0.72 0.012 70)">Hold to speak. Release to insert.</div></div>
+                    <div style="display:flex;gap:6px">
+                      <sc-for list="{{ keysPush }}" as="k" hint-placeholder-count="3"><div style="font:500 13px 'Geist Mono',monospace;min-width:36px;height:34px;padding:0 11px;border-radius:9px;background:{{ k.bg }};color:{{ k.fg }};border:1px solid rgba(255,240,220,.1);box-shadow:0 {{ k.sh }} 0 rgba(0,0,0,.5);transform:translateY({{ k.y }});display:flex;align-items:center;justify-content:center;transition:all .16s ease">{{ k.t }}</div></sc-for>
+                    </div>
+                  </div>
+                  <div style="border-radius:20px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08);padding:20px;display:flex;flex-direction:column;gap:18px">
+                    <div style="display:flex;flex-direction:column;gap:5px"><div style="font-size:14px;font-weight:600">Hands-free</div><div style="font-size:12.5px;color:oklch(0.72 0.012 70)">Press once to start. Press again to finish.</div></div>
+                    <div style="display:flex;gap:6px">
+                      <sc-for list="{{ keysFree }}" as="k" hint-placeholder-count="3"><div style="font:500 13px 'Geist Mono',monospace;min-width:36px;height:34px;padding:0 11px;border-radius:9px;background:oklch(0.235 0.008 60);border:1px solid rgba(255,240,220,.1);box-shadow:0 3px 0 rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center">{{ k }}</div></sc-for>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:oklch(0.72 0.012 70)">
+                <div style="display:flex;align-items:center;gap:8px"><div>{{ icMicMeta }}</div><div>MacBook Pro Microphone</div></div>
+                <div style="display:flex;align-items:center;gap:8px"><div>{{ icKeyMeta }}</div><div>You decide when to send</div></div>
+              </div>
+            </div>
+
+            <div style="grid-area:1/1;opacity:{{ pgM.o }};transform:translateY({{ pgM.y }});pointer-events:{{ pgM.pe }};transition:opacity .34s cubic-bezier(.3,.7,.4,1),transform .34s cubic-bezier(.3,.7,.4,1);display:flex;flex-direction:column;gap:30px">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(32px,3.6vw,46px);font-weight:620;letter-spacing:-.035em;line-height:1.02;font-stretch:90%">A little room for your voice.</div>
+                <div style="font-size:15px;color:oklch(0.72 0.012 70);text-wrap:pretty">Use what you have before downloading more. Existing models stay in their original folders.</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <div style="height:36px;padding:0 14px;border-radius:99px;border:1px solid rgba(255,240,220,.16);font-size:13px;font-weight:500;display:flex;align-items:center;cursor:pointer" style-hover="background:rgba(255,240,220,.06)">Add model file…</div>
+                <div style="height:36px;padding:0 14px;border-radius:99px;border:1px solid rgba(255,240,220,.16);font-size:13px;font-weight:500;display:flex;align-items:center;cursor:pointer" style-hover="background:rgba(255,240,220,.06)">Search a folder…</div>
+                <div style="flex:1"></div>
+                <div onClick="{{ rescan }}" style="height:36px;padding:0 14px 0 10px;border-radius:99px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;cursor:pointer;color:oklch(0.72 0.012 70)" style-hover="color:oklch(0.965 0.008 80)"><div>{{ icRescan }}</div><div>{{ rescanLabel }}</div></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:17px;font-weight:600">On this Mac</div><div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">1 available</div></div>
+                <div style="border-radius:20px;background:oklch(0.2 0.007 60);border:1px solid oklch(0.76 0.17 52 / .35);padding:18px 20px;display:flex;align-items:center;gap:16px">
+                  <div style="width:44px;height:44px;border-radius:12px;background:oklch(0.155 0.006 60);display:flex;align-items:center;justify-content:center;flex:none">{{ markModel }}</div>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">
+                    <div style="display:flex;align-items:center;gap:8px"><div style="font-size:14.5px;font-weight:600">Whisper Base Q5</div><div style="font:600 10px 'Geist Mono',monospace;letter-spacing:.08em;color:oklch(0.155 0.006 60);background:oklch(0.76 0.17 52);padding:3px 7px;border-radius:99px">ACTIVE</div></div>
+                    <div style="font-size:12.5px;color:oklch(0.72 0.012 70)">English · 59.7 MB · bigvoice download</div>
+                    <div style="font:11px 'Geist Mono',monospace;color:oklch(0.72 0.012 70);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">~/Library/Application Support/bigvoice/Models</div>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;flex-direction:column;gap:5px"><div style="font-size:17px;font-weight:600">Find your fit</div><div style="font-size:12.5px;color:oklch(0.72 0.012 70)">Open-weight Whisper models · MIT licensed · Runs offline after installation</div></div>
+                <div style="border-radius:20px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08);overflow:hidden">
+                  <sc-for list="{{ models }}" as="m" hint-placeholder-count="5">
+                    <div style="display:flex;flex-direction:column;gap:12px;padding:18px 20px;border-top:{{ m.bt }}">
+                      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+                        <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:4px">
+                          <div style="display:flex;align-items:center;gap:8px"><div style="font-size:14.5px;font-weight:600">{{ m.name }}</div><div style="font:600 10px 'Geist Mono',monospace;letter-spacing:.08em;color:oklch(0.76 0.17 52);opacity:{{ m.recO }}">RECOMMENDED</div></div>
+                          <div style="font-size:12.5px;color:oklch(0.72 0.012 70)">{{ m.lang }}</div>
+                        </div>
+                        <div style="width:180px;display:flex;flex-direction:column;gap:7px">
+                          <div style="height:6px;border-radius:3px;background:rgba(255,240,220,.05)"><div style="height:6px;width:{{ m.barW }};border-radius:3px;background:rgba(255,240,220,.14);overflow:hidden"><div style="height:6px;width:{{ m.fill }};background:oklch(0.76 0.17 52);border-radius:3px;transition:width .2s linear"></div></div></div>
+                          <div style="font:11.5px 'Geist Mono',monospace;color:{{ m.sizeCol }}">{{ m.size }}</div>
+                        </div>
+                        <div onClick="{{ m.act }}" style="width:96px;height:34px;border-radius:99px;border:1px solid {{ m.btnBc }};background:{{ m.btnBg }};color:{{ m.btnFg }};font-size:12.5px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s ease">{{ m.btn }}</div>
+                      </div>
+                      <div style="font:11.5px 'Geist Mono',monospace;color:oklch(0.72 0.012 70);opacity:{{ m.stO }};max-height:{{ m.stH }};overflow:hidden;transition:opacity .3s ease,max-height .4s cubic-bezier(.2,.8,.2,1)">{{ m.stage }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="font-size:12px;color:oklch(0.72 0.012 70);line-height:1.5;text-wrap:pretty">Bars show disk size to scale. Sizes are downloads, not working memory. English models use 5-bit quantization.</div>
+              </div>
+            </div>
+
+            <div style="grid-area:1/1;opacity:{{ pgS.o }};transform:translateY({{ pgS.y }});pointer-events:{{ pgS.pe }};transition:opacity .34s cubic-bezier(.3,.7,.4,1),transform .34s cubic-bezier(.3,.7,.4,1);display:flex;flex-direction:column;gap:30px">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(32px,3.6vw,46px);font-weight:620;letter-spacing:-.035em;line-height:1.02;font-stretch:90%">Make it second nature.</div>
+                <div style="font-size:15px;color:oklch(0.72 0.012 70)">Your shortcuts, your microphone, your way of finishing a thought.</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;justify-content:space-between;align-items:baseline"><div style="font-size:17px;font-weight:600">Shortcuts</div><div style="font-size:12.5px;color:oklch(0.76 0.17 52);cursor:pointer">Reset defaults</div></div>
+                <div style="border-radius:20px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08)">
+                  <div style="display:flex;align-items:center;gap:20px;padding:16px 18px"><div style="flex:1;display:flex;flex-direction:column;gap:4px"><div style="font-size:13.5px;font-weight:500">Push to talk</div><div style="font-size:12.5px;color:oklch(0.72 0.012 70)">Hold to record; release to finish.</div></div><div style="display:flex;gap:5px"><sc-for list="{{ keysFreeP }}" as="k" hint-placeholder-count="3"><div style="font:500 12px 'Geist Mono',monospace;min-width:30px;height:28px;padding:0 9px;border-radius:8px;background:oklch(0.235 0.008 60);border:1px solid rgba(255,240,220,.1);box-shadow:0 2px 0 rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center">{{ k }}</div></sc-for></div></div>
+                  <div style="height:1px;background:rgba(255,240,220,.07);margin:0 18px"></div>
+                  <div style="display:flex;align-items:center;gap:20px;padding:16px 18px"><div style="flex:1;display:flex;flex-direction:column;gap:4px"><div style="font-size:13.5px;font-weight:500">Hands-free</div><div style="font-size:12.5px;color:oklch(0.72 0.012 70)">Press to start; press again to finish.</div></div><div style="display:flex;gap:5px"><sc-for list="{{ keysFree }}" as="k" hint-placeholder-count="3"><div style="font:500 12px 'Geist Mono',monospace;min-width:30px;height:28px;padding:0 9px;border-radius:8px;background:oklch(0.235 0.008 60);border:1px solid rgba(255,240,220,.1);box-shadow:0 2px 0 rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center">{{ k }}</div></sc-for></div></div>
+                </div>
+                <div style="font-size:12px;color:oklch(0.72 0.012 70)">Use Control, Option, or Command with another key. Escape cancels an active dictation.</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="font-size:17px;font-weight:600">Input</div>
+                <div style="border-radius:20px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08)">
+                  <div style="display:flex;align-items:center;gap:20px;padding:16px 18px"><div style="flex:1;display:flex;flex-direction:column;gap:4px"><div style="font-size:13.5px;font-weight:500">Microphone</div><div style="font-size:12.5px;color:oklch(0.72 0.012 70)">Uses this device without changing macOS settings.</div></div><div style="width:200px;height:32px;border-radius:9px;background:oklch(0.235 0.008 60);border:1px solid rgba(255,240,220,.1);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:13px"><div>System default</div><div style="width:6px;height:6px;border-right:1.5px solid oklch(0.72 0.012 70);border-bottom:1.5px solid oklch(0.72 0.012 70);transform:translateY(-2px) rotate(45deg)"></div></div></div>
+                  <div style="height:1px;background:rgba(255,240,220,.07);margin:0 18px"></div>
+                  <div style="display:flex;align-items:center;gap:20px;padding:16px 18px"><div style="flex:1;display:flex;flex-direction:column;gap:4px"><div style="font-size:13.5px;font-weight:500">Language</div><div style="font-size:12.5px;color:oklch(0.72 0.012 70)">Automatic detection needs a multilingual model.</div></div><div style="width:160px;height:32px;border-radius:9px;background:oklch(0.235 0.008 60);border:1px solid rgba(255,240,220,.1);display:flex;align-items:center;justify-content:space-between;padding:0 12px;font-size:13px"><div>Automatic</div><div style="width:6px;height:6px;border-right:1.5px solid oklch(0.72 0.012 70);border-bottom:1.5px solid oklch(0.72 0.012 70);transform:translateY(-2px) rotate(45deg)"></div></div></div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="font-size:17px;font-weight:600">When you're finished</div>
+                <div style="border-radius:20px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08)">
+                  <sc-for list="{{ tgFinish }}" as="r" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:center;gap:20px;padding:16px 18px;border-top:{{ r.bt }}">
+                      <div style="flex:1;display:flex;flex-direction:column;gap:4px"><div style="font-size:13.5px;font-weight:500">{{ r.title }}</div><div style="font-size:12.5px;color:oklch(0.72 0.012 70)">{{ r.detail }}</div></div>
+                      <div onClick="{{ r.toggle }}" style="width:40px;height:24px;border-radius:12px;background:{{ r.track }};position:relative;cursor:pointer;flex:none;transition:background .3s ease"><div style="position:absolute;top:3px;left:{{ r.x }};width:18px;height:18px;border-radius:9px;background:{{ r.knob }};box-shadow:0 1px 3px rgba(0,0,0,.4);transition:left .34s cubic-bezier(.3,.7,.4,1),background .3s ease"></div></div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.5;color:oklch(0.84 0.13 88);opacity:{{ warnO }};max-height:{{ warnH }};overflow:hidden;transition:opacity .3s ease,max-height .45s cubic-bezier(.2,.8,.2,1)">Return can send messages or run terminal commands. bigvoice only presses it after confirmed insertion into the original field.</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="font-size:17px;font-weight:600">Audio cues</div>
+                <div style="border-radius:20px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08)">
+                  <sc-for list="{{ tgCues }}" as="r" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:center;gap:20px;padding:16px 18px;border-top:{{ r.bt }}">
+                      <div style="flex:1;font-size:13.5px;font-weight:500">{{ r.title }}</div>
+                      <div onClick="{{ r.toggle }}" style="width:40px;height:24px;border-radius:12px;background:{{ r.track }};position:relative;cursor:pointer;flex:none;transition:background .3s ease"><div style="position:absolute;top:3px;left:{{ r.x }};width:18px;height:18px;border-radius:9px;background:{{ r.knob }};box-shadow:0 1px 3px rgba(0,0,0,.4);transition:left .34s cubic-bezier(.3,.7,.4,1),background .3s ease"></div></div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:oklch(0.72 0.012 70)"><div style="font-weight:500">bigvoice 1.0</div><div>Whisper &amp; whisper.cpp · MIT</div></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap"><div style="font-size:20px;font-weight:600;letter-spacing:-.015em">The capsule</div><div style="font-size:13.5px;color:oklch(0.72 0.012 70)">Floats above the Dock in every Space. Never takes focus. Resizes to what it has to say.</div></div>
+      <div style="position:relative;height:340px;border-radius:24px;overflow:hidden;border:1px solid rgba(255,240,220,.08);background:oklch(0.19 0.007 60);background-image:repeating-linear-gradient(135deg,rgba(255,240,220,.035) 0 1px,transparent 1px 12px)">
+        <div style="position:absolute;left:24px;top:20px;font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">desktop · any app with a focused text field</div>
+        <div style="position:absolute;left:50%;bottom:34px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px">
+          <div style="font-size:11.5px;font-weight:500;padding:6px 12px;border-radius:99px;background:rgba(0,0,0,.85);white-space:nowrap;opacity:{{ cap.o }};transform:translateY({{ cap.iy }});transition:opacity .3s ease,transform .5s cubic-bezier(.2,.8,.2,1)">{{ capInstr }}</div>
+          <div style="width:{{ capW }};height:62px;border-radius:31px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.14);box-shadow:0 14px 40px rgba(0,0,0,.45);display:flex;align-items:center;gap:12px;padding:0 10px 0 11px;overflow:hidden;opacity:{{ cap.o }};transform:translateY({{ cap.y }}) scale({{ cap.s }});transition:width .56s cubic-bezier(.2,.8,.2,1),opacity .3s ease,transform .56s cubic-bezier(.2,.8,.2,1)">
+            <div style="width:40px;height:40px;border-radius:20px;background:oklch(0.76 0.17 52 / .12);display:flex;align-items:center;justify-content:center;flex:none">{{ markCap }}</div>
+            <div style="flex:1;min-width:0;display:grid">
+              <div style="grid-area:1/1;display:flex;flex-direction:column;gap:3px;opacity:{{ capA }};transition:opacity .3s ease">
+                <div style="height:24px;display:flex;align-items:center;gap:2.5px"><sc-for list="{{ cvBars }}" as="b" hint-placeholder-count="26"><div data-cv="1" style="flex:1;min-width:2px;height:10%;border-radius:99px;background:oklch(0.76 0.17 52);transition:height .09s linear"></div></sc-for></div>
+                <div style="font:10px 'Geist Mono',monospace;color:oklch(0.72 0.012 70);white-space:nowrap">{{ capSubA }}</div>
+              </div>
+              <div style="grid-area:1/1;display:flex;flex-direction:column;justify-content:center;gap:3px;opacity:{{ capB }};transition:opacity .3s ease">
+                <div style="font-size:13px;font-weight:600;white-space:nowrap">{{ capLabelB }}</div>
+                <div style="font:10px 'Geist Mono',monospace;color:oklch(0.72 0.012 70);white-space:nowrap">Entirely on your Mac</div>
+              </div>
+              <div style="grid-area:1/1;display:flex;flex-direction:column;justify-content:center;gap:3px;opacity:{{ capC }};transition:opacity .3s ease">
+                <div style="font-size:13px;font-weight:600;white-space:nowrap">Inserted into Notes</div>
+                <div style="font:10px 'Geist Mono',monospace;color:oklch(0.72 0.012 70);white-space:nowrap">Clipboard restored</div>
+              </div>
+            </div>
+            <div onClick="{{ finish }}" style="width:{{ stopW }};height:32px;border-radius:16px;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:{{ capA }};transition:width .4s cubic-bezier(.2,.8,.2,1),opacity .25s ease" style-hover="background:rgba(255,240,220,.08)"><div style="width:10px;height:10px;border-radius:2.5px;background:oklch(0.965 0.008 80)"></div></div>
+            <div onClick="{{ cancel }}" style="width:{{ xW }};height:32px;border-radius:16px;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:{{ xO }};transition:width .4s cubic-bezier(.2,.8,.2,1),opacity .25s ease" style-hover="background:rgba(255,240,220,.08)">{{ icCapX }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="appicon" data-screen-label="07 App icon" style="display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-wrap:wrap;gap:24px 64px;align-items:flex-end;justify-content:space-between;padding-bottom:28px;border-bottom:1px solid rgba(255,240,220,.1)">
+      <div style="display:flex;flex-direction:column;gap:14px"><div style="font:500 12px 'Geist Mono',monospace;color:oklch(0.76 0.17 52);letter-spacing:.08em">07 — APP ICON</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:650;letter-spacing:-.035em;line-height:.95;font-stretch:88%">Loud at every size.</div></div>
+      <div style="max-width:460px;font-size:15px;line-height:1.6;color:oklch(0.72 0.012 70);text-wrap:pretty">The listening mark on ink, set on the 24-unit grid. It reads at 16 px in the menu bar and speaks at 1024 in the Dock.</div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:40px 48px;padding:48px;border-radius:28px;background:oklch(0.2 0.007 60);border:1px solid rgba(255,240,220,.08)">
+      <div style="display:flex;flex-direction:column;gap:14px;align-items:center"><div style="width:220px;height:220px;border-radius:50px;background:oklch(0.155 0.006 60);box-shadow:inset 0 1px 0 rgba(255,240,220,.12),inset 0 0 0 1px rgba(255,240,220,.08),0 24px 50px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center">{{ icon220 }}</div><div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">1024</div></div>
+      <div style="display:flex;flex-direction:column;gap:14px;align-items:center"><div style="width:220px;height:220px;border-radius:50px;background:oklch(0.76 0.17 52);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 24px 50px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center">{{ icon220b }}</div><div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">1024 · alt</div></div>
+      <div style="display:flex;flex-direction:column;gap:14px;align-items:center"><div style="width:112px;height:112px;border-radius:26px;background:oklch(0.155 0.006 60);box-shadow:inset 0 1px 0 rgba(255,240,220,.12),inset 0 0 0 1px rgba(255,240,220,.08),0 12px 26px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center">{{ icon112 }}</div><div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">256</div></div>
+      <div style="display:flex;flex-direction:column;gap:14px;align-items:center"><div style="width:56px;height:56px;border-radius:13px;background:oklch(0.155 0.006 60);box-shadow:inset 0 0 0 1px rgba(255,240,220,.1),0 6px 14px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center">{{ icon56 }}</div><div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">64</div></div>
+      <div style="display:flex;flex-direction:column;gap:14px;align-items:center"><div style="width:28px;height:28px;border-radius:7px;background:oklch(0.155 0.006 60);box-shadow:inset 0 0 0 1px rgba(255,240,220,.1);display:flex;align-items:center;justify-content:center">{{ icon28 }}</div><div style="font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">32</div></div>
+    </div>
+  </section>
+
+  <footer style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:28px;border-top:1px solid rgba(255,240,220,.1);font:12px 'Geist Mono',monospace;color:oklch(0.72 0.012 70)">
+    <div>bigvoice · on your Mac, off the cloud</div><div>Bricolage Grotesque · Geist · Geist Mono</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;autoplay&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;demoPhase&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;idle&quot;,&quot;arming&quot;,&quot;listening&quot;,&quot;transcribing&quot;,&quot;inserting&quot;,&quot;done&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;reducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+const E='cubic-bezier(.2,.8,.2,1)';
+const C={ink:'oklch(0.155 0.006 60)',char:'oklch(0.2 0.007 60)',surf:'oklch(0.235 0.008 60)',paper:'oklch(0.965 0.008 80)',stone:'oklch(0.72 0.012 70)',sig:'oklch(0.76 0.17 52)',cau:'oklch(0.84 0.13 88)'};
+const PROF=[0.42,0.7,1,0.78,0.5];
+const PHRASE='Move the design review to Thursday, and loop in the platform team before we lock the agenda.'.split(' ');
+const MK={idle:'idle',arming:'dots',listening:'listen',transcribing:'wave',inserting:'caret',done:'check'};
+const TITLES={idle:'Your voice, right where you need it.',arming:'Getting ready to listen',listening:"Go ahead. You're being heard.",transcribing:'Turning your voice into words',inserting:'Putting your words in place',done:'Done. Your words are in place.'};
+const MKINFO={idle:['Idle','A closed dot. Ready, not recording.'],arming:['Arming','Five points line up while the microphone opens.'],listening:['Listening','Bars follow the live input level.'],transcribing:['Transcribing','A travelling wave while Whisper works offline.'],inserting:['Inserting','The caret — words landing in your field.'],done:['Delivered','A check, then back to quiet.']};
+const MODELS=[{id:'tiny-en',name:'Whisper Tiny Q5',lang:'English · Compact Q5',mb:32.2},{id:'base-en',name:'Whisper Base Q5',lang:'English · Compact Q5',mb:59.7,rec:true,active:true},{id:'tiny',name:'Whisper Tiny',lang:'Multilingual · Auto-detect language',mb:77.7},{id:'base',name:'Whisper Base',lang:'Multilingual · Auto-detect language',mb:148.0},{id:'small-en',name:'Whisper Small Q5',lang:'English · Compact Q5',mb:190.1}];
+const ICONS=[['wave','Dictation'],['stack','Models'],['sliders','Settings'],['mic','Microphone'],['lock','On-device'],['download','Install'],['key','Shortcut'],['check','Delivered'],['close','Cancel'],['rescan','Rescan']];
+
+class Component extends DCLogic {
+  state={phase:'idle',page:'dictation',words:0,secs:0,mode:'push',mkPhase:'listening',tick:0,flip:false,hov:-1,navHov:null,inst:{},installed:{},tg:{autoReturn:false,clip:true,cueStart:true,cueStop:true},spin:false,mic:false,micErr:false};
+  T=[];hist=[];heroHist=[];contentRef=React.createRef();
+  componentDidMount(){
+    this.alive=true;
+    const loop=(ts)=>{ if(!this.alive)return; try{this.frame(ts/1000);}catch(e){} this.raf=requestAnimationFrame(loop); };
+    this.raf=requestAnimationFrame(loop);
+    this.iv=setInterval(()=>this.setState(s=>({tick:(s.tick+1)%ICONS.length})),1500);
+    this.iv2=setInterval(()=>this.setState(s=>({flip:!s.flip})),1600);
+    this.iv3=setInterval(()=>{ if(this.mkAuto!==false) this.setState(s=>{const k=Object.keys(MK);return {mkPhase:k[(k.indexOf(s.mkPhase)+1)%k.length]};}); },2100);
+    this.onKey=(e)=>{ if(e.key==='Escape') this.cancel(); };
+    window.addEventListener('keydown',this.onKey);
+    this.queueAuto(1600);
+  }
+  componentWillUnmount(){ this.alive=false; cancelAnimationFrame(this.raf); [this.iv,this.iv2,this.iv3,this.instIv].forEach(clearInterval); this.clear(); window.removeEventListener('keydown',this.onKey); if(this.stream) this.stream.getTracks().forEach(t=>t.stop()); }
+  clear(){ this.T.forEach(clearTimeout); this.T=[]; clearInterval(this.wIv); }
+  later(fn,ms){ this.T.push(setTimeout(fn,ms)); }
+  frozen(){ const d=this.props.demoPhase; return !!d && d!=='auto'; }
+  queueAuto(ms){ if(this.props.autoplay===false||this.frozen()) return; this.later(()=>{ if(this.state.page==='dictation'&&this.state.phase==='idle') this.run('push'); else this.queueAuto(3000); },ms); }
+  run(mode){
+    this.clear(); this.hist=[];
+    this.setState({phase:'arming',words:0,secs:0,mode});
+    this.later(()=>{ this.t0=performance.now(); this.setState({phase:'listening'});
+      this.wIv=setInterval(()=>this.setState(s=>({words:Math.min(s.words+1,PHRASE.length),secs:Math.floor((performance.now()-this.t0)/1000)})),330);
+      this.later(()=>this.finish(),PHRASE.length*330+500);
+    },800);
+  }
+  finish(){ if(this.state.phase!=='listening')return; this.clear(); this.setState({phase:'transcribing',words:PHRASE.length});
+    this.later(()=>this.setState({phase:'inserting'}),1600);
+    this.later(()=>this.setState({phase:'done'}),2500);
+    this.later(()=>{ this.setState({phase:'idle'}); this.queueAuto(3600); },5000);
+  }
+  cancel(){ if(this.state.phase==='idle'||this.state.phase==='done')return; this.clear(); this.setState({phase:'idle',words:0}); this.queueAuto(5000); }
+  async toggleMic(){
+    if(this.an){ this.stream.getTracks().forEach(t=>t.stop()); this.an=null; this.setState({mic:false}); return; }
+    try{ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia) throw new Error('no mic'); const st=await navigator.mediaDevices.getUserMedia({audio:true}); const ctx=new (window.AudioContext||window.webkitAudioContext)(); const an=ctx.createAnalyser(); an.fftSize=1024; ctx.createMediaStreamSource(st).connect(an); this.buf=new Float32Array(an.fftSize); this.an=an; this.stream=st; this.setState({mic:true,micErr:false}); }
+    catch(e){ this.setState({micErr:true}); }
+  }
+  install(id){
+    const inst=this.state.inst;
+    if(inst[id]){ const n={...inst}; delete n[id]; this.setState({inst:n}); return; }
+    this.setState({inst:{...inst,[id]:0}});
+    if(!this.instIv) this.instIv=setInterval(()=>{
+      const cur={...this.state.inst}, done={...this.state.installed}; let any=false;
+      Object.keys(cur).forEach(k=>{ cur[k]+=0.011; any=true; if(cur[k]>=1){ delete cur[k]; done[k]=true; } });
+      this.setState({inst:cur,installed:done});
+      if(!any||!Object.keys(cur).length){ clearInterval(this.instIv); this.instIv=null; }
+    },50);
+  }
+  frame(t){
+    const rm=!!this.props.reducedMotion;
+    const v=(x)=>{const g=Math.max(0,Math.min(1,(Math.sin(x*0.63)+0.45)*2.2)); const s=Math.pow(Math.abs(Math.sin(x*4.1+Math.sin(x*1.3)*2)),1.4); return g*(0.16+0.84*s)*(0.82+0.18*Math.sin(x*17));};
+    let mic=null;
+    if(this.an){ this.an.getFloatTimeDomainData(this.buf); let r=0; for(let i=0;i<this.buf.length;i++) r+=this.buf[i]*this.buf[i]; mic=Math.min(1,Math.sqrt(r/this.buf.length)*7); }
+    const ph=this.effPhase||'idle';
+    const heroE=rm?0.5:(mic!=null?mic:v(t));
+    const appE=ph==='listening'?(mic!=null?mic:v(t*1.07+3)):0;
+    this.hs=(this.hs||0)+(heroE-(this.hs||0))*0.16;
+    this.as=(this.as||0)+(appE-(this.as||0))*0.25;
+    if(!this.lt||t-this.lt>0.05){ this.lt=t; this.heroHist.push(heroE); if(this.heroHist.length>120)this.heroHist.shift(); if(ph==='listening'&&!rm){ this.hist.push(appE*(0.75+Math.random()*0.25)); if(this.hist.length>80)this.hist.shift(); } }
+    const q=(s)=>document.querySelectorAll(s);
+    const hw=260+540*(rm?0.6:this.hs);
+    q('[data-hw]').forEach(el=>{el.style.fontVariationSettings=`"wght" ${hw.toFixed(0)}, "wdth" ${(78+22*(rm?0.6:this.hs)).toFixed(1)}, "opsz" 96`;});
+    q('[data-hwn]').forEach(el=>{el.textContent=Math.round(hw);});
+    const hm=q('[data-hm]'); const HN=hm.length; hm.forEach((el,i)=>{ const x=rm?0.3+0.5*PROF[i%5]:this.heroHist[this.heroHist.length-HN+i]; el.style.height=(5+(x||0)*95)+'%'; });
+    const bars=(sel)=>{ const els=q(sel), n=els.length; els.forEach((el,i)=>{ let hh=0.06,o=0.3; if(ph==='listening'||ph==='transcribing'||ph==='inserting'){ const x=this.hist[this.hist.length-n+i]; hh=x==null?0.06:Math.max(0.06,x); o=1; if(ph!=='listening'){ const f=((t*0.8)%1.3)-0.15, d=i/n-f; o=0.22+0.78*Math.exp(-d*d*50); } } if(rm&&ph==='listening'){hh=0.2+0.6*PROF[i%5];} el.style.height=(hh*100)+'%'; el.style.opacity=o; }); };
+    bars('[data-wv]'); bars('[data-cv]');
+    q('[data-ring]').forEach(el=>{ el.style.transform=`scale(${(1+this.as*0.4).toFixed(3)})`; el.style.opacity=(0.1+this.as*0.35).toFixed(3); });
+    q('[data-mk]').forEach(m=>{ const p=m.dataset.p, S=+m.dataset.s, st=m.dataset.static==='1'||rm; const env=m.dataset.src==='app'?this.as:this.hs;
+      m.querySelectorAll('[data-mkb]').forEach((b,i)=>{ let tf='none';
+        if(p==='listen') tf= st?`scaleY(${PROF[i]})`:`scaleY(${Math.max(0.12,Math.min(1,env*PROF[i]*(0.7+0.3*Math.sin(t*8.3+i*1.9))*1.6+0.1)).toFixed(3)})`;
+        else if(!st&&p==='wave') tf=`translateY(${(Math.sin(t*7-i*0.8)*S*0.14).toFixed(2)}px)`;
+        else if(!st&&p==='idle') tf=`scale(${(1+0.045*Math.sin(t*2.2)).toFixed(3)})`;
+        b.style.transform=tf; }); });
+  }
+  mark(S,p,color,src,st){
+    const h=React.createElement, w=0.11*S, g=0.085*S, x0=(S-(5*w+4*g))/2;
+    const kids=[0,1,2,3,4].map(i=>{ const xi=x0+i*(w+g); let o={l:xi,t:S/2-w/2,w,h:w,op:1,rot:0};
+      if(p==='idle'){const d=0.38*S;o={l:S/2-d/2,t:S/2-d/2,w:d,h:d,op:1,rot:0};}
+      else if(p==='listen'){o={l:xi,t:0.05*S,w,h:0.9*S,op:1,rot:0};}
+      else if(p==='caret'){o=i===2?{l:S/2-0.45*w,t:0.1*S,w:0.9*w,h:0.8*S,op:1,rot:0}:{l:S/2-w/2,t:S/2-w/2,w,h:w,op:0,rot:0};}
+      else if(p==='check'){const vx=0.4*S,vy=0.76*S; if(i===0){const L=0.3*S;o={l:vx-w/2,t:vy-L,w,h:L,op:1,rot:-45};} else if(i===1){const L=0.64*S;o={l:vx-w/2,t:vy-L,w,h:L,op:1,rot:40};} else o={l:vx-w/2,t:vy-w,w,h:w,op:0,rot:0};}
+      const d=i*28, tr=['left','top','width','height','transform'].map(k=>`${k} .56s ${E} ${d}ms`).join(',')+`, opacity .3s ease ${d}ms`;
+      return h('div',{key:i,style:{position:'absolute',left:o.l,top:o.t,width:o.w,height:o.h,opacity:o.op,transform:`rotate(${o.rot}deg)`,transformOrigin:`50% calc(100% - ${w/2}px)`,transition:tr}},
+        h('div',{'data-mkb':i,style:{position:'absolute',inset:0,borderRadius:9999,background:color,transition:'transform .12s linear, background .4s ease',transform:p==='listen'?`scaleY(${PROF[i]})`:'none'}}));
+    });
+    return h('div',{'data-mk':1,'data-p':p,'data-s':S,'data-src':src||'hero','data-static':st?'1':'0',style:{position:'relative',width:S,height:S,flex:'none'}},kids);
+  }
+  ic(name,on,s,col,bg){
+    const h=React.createElement, u=s/24, px=(n)=>n*u;
+    const P=(k,st)=>{const d=parseInt(st.transitionDelay||0)||0; const x={...st}; delete x.transitionDelay; return h('div',{key:k,style:Object.assign({position:'absolute',boxSizing:'border-box',transition:`all .5s ${E} ${d}ms`},x)});};
+    const bw=`${px(2)}px solid ${col}`; let k=[];
+    if(name==='wave'){const off=[8,16,11],onh=[16,7,19]; k=[6,12,18].map((c,i)=>{const H=on?onh[i]:off[i]; return P(i,{left:px(c-1.25),width:px(2.5),top:px(12-H/2),height:px(H),borderRadius:99,background:col,transitionDelay:i*40+'ms'});});}
+    else if(name==='stack'){const tops=on?[2.5,10.5,18.5]:[5.5,10.5,15.5]; k=tops.map((tp,i)=>P(i,{left:px(i===1&&on?2:4),width:px(i===1&&on?20:16),top:px(tp),height:px(3),borderRadius:px(1.5),background:col,opacity:i===1||!on?1:0.55}));}
+    else if(name==='sliders'){k=[P(0,{left:px(3),width:px(18),top:px(7),height:px(2),borderRadius:99,background:col,opacity:.55}),P(1,{left:px(3),width:px(18),top:px(15),height:px(2),borderRadius:99,background:col,opacity:.55}),P(2,{left:px(on?14:3),top:px(4.5),width:px(7),height:px(7),borderRadius:99,border:bw,background:bg}),P(3,{left:px(on?3:14),top:px(12.5),width:px(7),height:px(7),borderRadius:99,border:bw,background:bg,transitionDelay:'60ms'})];}
+    else if(name==='mic'){k=[P(0,{left:px(8),top:px(on?1:2),width:px(8),height:px(13),borderRadius:99,border:bw,background:on?col:'transparent'}),P(1,{left:px(11),top:px(17),width:px(2),height:px(4),background:col,borderRadius:99}),P(2,{left:px(7),top:px(20),width:px(10),height:px(2),background:col,borderRadius:99}),P(3,{left:px(on?1.5:6),top:px(7),width:px(3),height:px(3),borderRadius:99,background:col,opacity:on?1:0}),P(4,{left:px(on?19.5:15),top:px(7),width:px(3),height:px(3),borderRadius:99,background:col,opacity:on?1:0})];}
+    else if(name==='lock'){k=[P(0,{left:px(7.5),top:px(on?4:0.5),width:px(9),height:px(10),borderRadius:`${px(4.5)}px ${px(4.5)}px 0 0`,borderTop:bw,borderLeft:bw,borderRight:bw}),P(1,{left:px(5),top:px(11),width:px(14),height:px(10),borderRadius:px(2.5),background:col}),P(2,{left:px(11),top:px(14.5),width:px(2),height:px(3.5),borderRadius:99,background:bg})];}
+    else if(name==='download'){const dy=on?4:0; k=[P(0,{left:px(11),top:px(2+dy),width:px(2),height:px(12),borderRadius:99,background:col}),P(1,{left:px(11),top:px(7+dy),width:px(2),height:px(7),borderRadius:99,background:col,transformOrigin:`50% calc(100% - ${px(1)}px)`,transform:'rotate(45deg)'}),P(2,{left:px(11),top:px(7+dy),width:px(2),height:px(7),borderRadius:99,background:col,transformOrigin:`50% calc(100% - ${px(1)}px)`,transform:'rotate(-45deg)'}),P(3,{left:px(on?2:4),top:px(20),width:px(on?20:16),height:px(2),borderRadius:99,background:col})];}
+    else if(name==='key'){k=[P(0,{left:px(3),top:px(on?20:18),width:px(18),height:px(on?2:4),borderRadius:`0 0 ${px(4)}px ${px(4)}px`,background:col,opacity:.45}),P(1,{left:px(3),top:px(on?4:2),width:px(18),height:px(17),borderRadius:px(4.5),border:bw,background:bg}),P(2,{left:px(9),top:px(on?14:12),width:px(6),height:px(2),borderRadius:99,background:col})];}
+    else if(name==='check'){const w=px(2.2), o=`50% calc(100% - ${w/2}px)`; k=[P(0,{left:px(2),top:px(2),width:px(20),height:px(20),borderRadius:99,border:bw,opacity:on?1:.45,transform:on?'scale(1)':'scale(.88)'}),P(1,{left:px(10.5)-w/2,top:px(16)-px(5),width:w,height:px(5),borderRadius:99,background:col,transformOrigin:o,transform:`rotate(-45deg) scaleY(${on?1:0.001})`}),P(2,{left:px(10.5)-w/2,top:px(16)-px(9.5),width:w,height:px(9.5),borderRadius:99,background:col,transformOrigin:o,transform:`rotate(42deg) scaleY(${on?1:0.001})`,transitionDelay:on?'200ms':'0ms'})];}
+    else if(name==='close'){k=[P(0,{left:px(11),top:px(4),width:px(2),height:px(16),borderRadius:99,background:col,transform:`rotate(${on?135:45}deg)`}),P(1,{left:px(11),top:px(4),width:px(2),height:px(16),borderRadius:99,background:col,transform:`rotate(${on?45:-45}deg)`,transitionDelay:'40ms'})];}
+    else if(name==='rescan'){k=[P(0,{left:px(4),top:px(4),width:px(16),height:px(16),borderRadius:99,borderStyle:'solid',borderWidth:px(2),borderColor:`transparent ${col} ${col} ${col}`,transform:`rotate(${on?405:45}deg)`,transition:`transform .9s ${E}`}),P(1,{left:px(16.2),top:px(3.2),width:px(4),height:px(4),borderRadius:99,background:col,opacity:on?0:1,transition:'opacity .2s ease'})];}
+    else if(name==='stop'){k=[P(0,{left:px(6),top:px(6),width:px(12),height:px(12),borderRadius:px(3),background:col})];}
+    return h('div',{style:{position:'relative',width:s,height:s,flex:'none'}},k);
+  }
+  componentDidUpdate(){ if(this._pg!==this.state.page){ this._pg=this.state.page; if(this.contentRef.current) this.contentRef.current.scrollTop=0; } }
+  renderVals(){
+    const s=this.state, fz=this.frozen();
+    const ph=fz?this.props.demoPhase:s.phase; this.effPhase=ph;
+    const words=fz?(ph==='listening'?9:(ph==='idle'||ph==='arming')?0:PHRASE.length):s.words;
+    const mp=MK[ph], busy=['arming','listening','transcribing','inserting'].includes(ph), lis=ph==='listening';
+    const vis=(on,dy)=>({o:on?1:0,y:on?'0px':(dy||'14px'),pe:on?'auto':'none'});
+    const navList=[['dictation','Dictation','wave'],['models','Models','stack'],['settings','Settings','sliders']];
+    const pgIdx=navList.findIndex(n=>n[0]===s.page);
+    const secs=fz&&lis?4:s.secs, timer=`0:${String(secs).padStart(2,'0')}`;
+    const tog=(list)=>list.map((r,i)=>{const on=s.tg[r.k]; return {...r,bt:i?'1px solid rgba(255,240,220,.07)':'0',track:on?C.sig:'rgba(255,240,220,.14)',x:on?'19px':'3px',knob:on?C.ink:C.paper,toggle:()=>this.setState(st=>({tg:{...st.tg,[r.k]:!st.tg[r.k]}}))};});
+    const capWMap={idle:'220px',arming:'232px',listening:'372px',transcribing:'262px',inserting:'262px',done:'262px'};
+    const pushPressed=lis&&s.mode==='push'&&!fz || (fz&&lis);
+    return {
+      markHeroSmall:this.mark(24,'listen',C.sig,'hero'),
+      toggleMic:()=>this.toggleMic(),
+      micIcon:this.ic('mic',s.mic,18,s.mic?C.sig:C.paper,C.ink),
+      micLabel:s.mic?'Listening to your microphone':'Speak to it',
+      micNote:s.micErr?'Mic unavailable in this preview':(s.mic?'Click again to stop':'Uses your mic locally'),
+      hmBars:Array.from({length:72},(_,i)=>i),
+      markShow:this.mark(200,MK[s.mkPhase],s.mkPhase==='idle'?C.paper:C.sig,'hero'),
+      mkLabel:MKINFO[s.mkPhase][0].toUpperCase(),
+      mkStates:Object.keys(MK).map((k,i)=>({label:MKINFO[k][0],note:MKINFO[k][1],num:'0'+(i+1),mark:this.mark(36,MK[k],k===s.mkPhase?C.sig:C.paper,'hero'),bg:k===s.mkPhase?'oklch(0.235 0.008 60)':'transparent',bc:k===s.mkPhase?'oklch(0.76 0.17 52 / .4)':'rgba(255,240,220,.07)',pick:()=>{this.mkAuto=false;this.setState({mkPhase:k});}})),
+      swatches:[{name:'INK',role:'Canvas',code:'oklch .155 .006 60',v:C.ink,fg:C.paper},{name:'CHAR',role:'Sidebar, capsule, cards',code:'oklch .20 .007 60',v:C.char,fg:C.paper},{name:'SURFACE',role:'Keys, raised fields',code:'oklch .235 .008 60',v:C.surf,fg:C.paper},{name:'STONE',role:'Secondary text',code:'oklch .72 .012 70',v:C.stone,fg:C.ink},{name:'PAPER',role:'Primary text',code:'oklch .965 .008 80',v:C.paper,fg:C.ink},{name:'CAUTION',role:'Warnings only',code:'oklch .84 .13 88',v:C.cau,fg:C.ink}],
+      moX:s.flip?'calc(100% - 20px)':'0px',
+      iconTiles:ICONS.map(([n,l],i)=>{const on=s.hov===i||(s.hov<0&&s.tick===i); return {label:l,icon:this.ic(n,on,44,on?C.sig:C.paper,C.surf),bc:on?'oklch(0.76 0.17 52 / .4)':'rgba(255,240,220,.07)',dot:on?1:0,enter:()=>this.setState({hov:i}),leave:()=>this.setState({hov:-1})};}),
+      mbBg:busy?'oklch(0.76 0.17 52 / .22)':'transparent',
+      markMenu:this.mark(16,mp,busy||ph==='done'?C.sig:C.paper,'app'),
+      markSide:this.mark(26,mp,C.sig,'app'),
+      navY:(pgIdx*46)+'px',
+      nav:navList.map(([k,l,icn])=>{const act=s.page===k, on=act||s.navHov===k; return {label:l,icon:this.ic(icn,on,18,act?C.paper:C.stone,C.char),col:act?C.paper:C.stone,fw:act?600:450,dot:act?1:0,go:()=>this.setState({page:k}),enter:()=>this.setState({navHov:k}),leave:()=>this.setState({navHov:null})};}),
+      icLockSide:this.ic('lock',true,14,C.stone,C.ink),
+      contentRef:this.contentRef,
+      pgD:vis(s.page==='dictation'),pgM:vis(s.page==='models'),pgS:vis(s.page==='settings'),
+      stDot:busy||ph==='done'?C.sig:C.stone, stGlow:lis?'4px':'0px',
+      stLabel:{idle:'Ready when you are',arming:'Listening on this Mac',listening:'Listening on this Mac',transcribing:'Working locally',inserting:'Working locally',done:'Delivered'}[ph],
+      modeTag:s.mode==='practice'&&busy?'PRACTICE · NOTHING IS PASTED':(busy?'PUSH TO TALK · ⌃ ⌥ SPACE':'WHISPER BASE Q5 · OFFLINE'),
+      titles:Object.keys(TITLES).map(k=>({text:TITLES[k],o:k===ph?1:0,f:k===ph?'blur(0px)':'blur(10px)',y:k===ph?'0px':'10px'})),
+      stageBc:lis?'oklch(0.76 0.17 52 / .45)':'rgba(255,240,220,.08)',
+      markStage:this.mark(40,mp,ph==='idle'?C.paper:C.sig,'app'),
+      wvBars:Array.from({length:56},(_,i)=>i),
+      timer, timerCol:lis?C.sig:C.stone,
+      trLabel:lis?'LIVE TRANSCRIPT':(ph==='idle'&&words?'LAST DICTATION · MEMORY ONLY':'TRANSCRIPT'),
+      phO:words===0?1:0,
+      words:PHRASE.map((w,i)=>{const v=i<words; return {w,o:v?1:0,f:v?'blur(0px)':'blur(6px)',y:v?'0px':'8px',c:lis&&i===words-1?C.sig:(ph==='transcribing'?C.stone:C.paper)};}),
+      primary:()=>{ if(lis) this.finish(); else if(!busy) this.run('practice'); },
+      priO:busy&&!lis?0.45:1,
+      priIcon:lis?this.ic('stop',true,18,C.ink,C.sig):this.ic('mic',false,18,C.ink,C.sig),
+      priLabel:lis?'Finish dictation':'Try it here',
+      cancel:()=>this.cancel(), finish:()=>this.finish(),
+      canO:busy?1:0, canX:busy?'0px':'-10px', canPe:busy?'auto':'none',
+      icCancel:this.ic('close',false,16,C.paper,C.char),
+      goSettings:()=>this.setState({page:'settings'}),
+      pushBc:pushPressed?'oklch(0.76 0.17 52 / .45)':'rgba(255,240,220,.08)',
+      keysPush:['⌃','⌥','Space'].map(t=>({t,y:pushPressed?'2px':'0px',sh:pushPressed?'1px':'3px',bg:pushPressed?'oklch(0.76 0.17 52 / .16)':C.surf,fg:pushPressed?C.sig:C.paper})),
+      keysFree:['⌃','⌥','Return'], keysFreeP:['⌃','⌥','Space'],
+      icMicMeta:this.ic('mic',lis,14,C.stone,C.ink), icKeyMeta:this.ic('key',false,14,C.stone,C.ink),
+      rescan:()=>{this.setState({spin:true}); setTimeout(()=>this.setState({spin:false}),1400);},
+      icRescan:this.ic('rescan',s.spin,16,'currentColor',C.ink), rescanLabel:s.spin?'Searching':'Rescan',
+      markModel:this.mark(22,'listen',C.sig,'app',true),
+      models:MODELS.map((m,i)=>{const p=s.inst[m.id], ins=p!=null, done=!!s.installed[m.id]||m.active;
+        return {name:m.name,lang:m.lang,bt:i?'1px solid rgba(255,240,220,.07)':'0',recO:m.rec?1:0,barW:(m.mb/190.1*100).toFixed(1)+'%',fill:done?'100%':ins?(p*100).toFixed(1)+'%':'0%',
+          size:m.active?'In use · no extra space':ins?`${(p*m.mb).toFixed(1)} of ${m.mb.toFixed(1)} MB`:`${m.mb.toFixed(1)} MB`,sizeCol:m.active||ins?C.sig:C.stone,
+          btn:m.active?'In use':ins?'Cancel':done?'Use':'Install',btnBg:m.active?'transparent':(done&&!ins?C.sig:'transparent'),btnFg:m.active?C.stone:(done&&!ins?C.ink:C.paper),btnBc:m.active?'rgba(255,240,220,.08)':(done&&!ins?C.sig:'rgba(255,240,220,.16)'),
+          act:()=>{ if(!m.active&&!done||ins) this.install(m.id); },
+          stage:ins?(p<0.08?'Checking for a copy you already have…':p<0.86?'Downloading from the pinned Hugging Face revision':p<0.97?'Verifying byte count and SHA-256':'Installing atomically'):'', stO:ins?1:0, stH:ins?'20px':'0px'};}),
+      tgFinish:tog([{k:'autoReturn',title:'Automatically press Return',detail:'Off by default. Leave text ready for your review.'},{k:'clip',title:'Restore the clipboard',detail:'Keep your previous copy. Never overwrite a newer one.'}]),
+      tgCues:tog([{k:'cueStart',title:'Play a sound when listening starts'},{k:'cueStop',title:'Play a sound when listening stops'}]),
+      warnO:s.tg.autoReturn?1:0, warnH:s.tg.autoReturn?'60px':'0px',
+      cap:{o:ph==='idle'?0:1,y:ph==='idle'?'18px':'0px',s:ph==='idle'?0.92:1,iy:ph==='idle'?'10px':'0px'},
+      capW:capWMap[ph],
+      capInstr:{idle:' ',arming:'Opening your microphone · Esc to cancel',listening:s.mode==='practice'?'Practice dictation · Esc to cancel':'Release ⌃ ⌥ Space to finish',transcribing:'Transcribing offline · Esc to cancel',inserting:'Inserting into your original app',done:'Inserted · you decide when to send'}[ph],
+      markCap:this.mark(24,mp,C.sig,'app'),
+      cvBars:Array.from({length:26},(_,i)=>i),
+      capA:lis?1:0, capB:(ph==='arming'||ph==='transcribing'||ph==='inserting')?1:0, capC:ph==='done'?1:0,
+      capSubA:`${timer} · Listening`, capLabelB:{arming:'Getting ready',transcribing:'Transcribing',inserting:'Inserting'}[ph]||'',
+      stopW:lis?'32px':'0px', xW:ph==='done'?'0px':'32px', xO:ph==='done'?0:1,
+      icCapX:this.ic('close',false,14,C.stone,C.char),
+      icon220:this.mark(118,'listen',C.sig,'hero',true), icon220b:this.mark(118,'listen',C.ink,'hero',true),
+      icon112:this.mark(60,'listen',C.sig,'hero',true), icon56:this.mark(30,'listen',C.sig,'hero',true), icon28:this.mark(16,'listen',C.sig,'hero',true)
+    };
+  }
+}
+</script>
+</body>
+</html>

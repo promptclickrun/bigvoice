@@ -1,0 +1,23 @@
+{
+  "architecture": "arm64",
+  "components": [
+    {
+      "name": "onnxruntime-genai",
+      "version": "0.16.0",
+      "url": "https://github.com/microsoft/onnxruntime-genai/releases/download/v0.16.0/onnxruntime-genai-0.16.0-osx-arm64.tar.gz",
+      "sha256": "c1e956aa636f565b7082e6569f6ff4193427c97a4556c1eb4bbe37d1a44314b4",
+      "library": "libonnxruntime-genai.dylib",
+      "archive_library": "libonnxruntime-genai.dylib",
+      "aliases": []
+    },
+    {
+      "name": "onnxruntime",
+      "version": "1.26.0",
+      "url": "https://github.com/microsoft/onnxruntime/releases/download/v1.26.0/onnxruntime-osx-arm64-1.26.0.tgz",
+      "sha256": "7a1280bbb1701ea514f71828765237e7896e0f2e1cd332f1f70dbd5c3e33aca3",
+      "library": "libonnxruntime.dylib",
+      "archive_library": "libonnxruntime.1.26.0.dylib",
+      "aliases": ["libonnxruntime.1.26.0.dylib", "libonnxruntime.1.dylib"]
+    }
+  ]
+}
