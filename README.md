@@ -26,10 +26,8 @@ Download `bigvoice-<version>-macos-arm64.zip` from Releases, unzip, and move
 **Accessibility** from the setup steps. bigvoice doesn't need Speech Recognition,
 Input Monitoring, or Full Disk Access.
 
-The release package is signed with an Apple Development certificate and is not
-notarized. On a Mac other than the one that built it, macOS blocks the first
-launch: open **System Settings › Privacy & Security** and choose **Open Anyway**.
-For wide distribution, build with a Developer ID identity and notarize (below).
+The release package is signed with a Developer ID certificate, notarized by
+Apple, and stapled, so it opens without Gatekeeper warnings on any Mac.
 
 ### If Accessibility looks on but bigvoice says it's off
 
@@ -135,22 +133,26 @@ redistributed here.
 
 ## Build
 
-Requires Apple's Command Line Tools with Swift 6 or later.
+Requires Xcode 16 or later (Swift 6).
 
 ```sh
 ./scripts/build-app.sh
 ```
 
 This verifies the pinned fonts and fetches checksum-pinned ONNX Runtime
-libraries (`scripts/bootstrap-onnx.py`, never model weights), builds a release,
-assembles `dist/bigvoice.app` with its native runtimes, fonts, icon, and license
-notices, signs it, and writes `dist/bigvoice-<version>-macos-arm64.zip`.
+libraries (`scripts/bootstrap-onnx.py`, never model weights), builds a release
+with Xcode (`xcodebuild`), assembles `dist/bigvoice.app` with its native
+runtimes, fonts, icon, and license notices, signs it, and writes
+`dist/bigvoice-<version>-macos-arm64.zip`.
 
-Signing uses the first **Developer ID Application** or **Apple Development**
-identity in your keychain (hardened runtime), so privacy approvals survive
+Signing uses the first **Developer ID Application** identity in your keychain,
+then **Apple Development** (hardened runtime), so privacy approvals survive
 rebuilds; without one it signs ad hoc. Override with
-`CODESIGN_IDENTITY="Developer ID Application: …"`, then notarize with your own
-credentials to distribute. Don't disable Gatekeeper.
+`CODESIGN_IDENTITY="…"`. To notarize and staple a Developer ID build, pass
+notarytool credentials: `NOTARY_PROFILE=<keychain profile>`, or
+`NOTARY_KEY_ID` and `NOTARY_ISSUER` for an App Store Connect API key
+(`NOTARY_KEY_PATH` defaults to `~/.private_keys/AuthKey_<id>.p8`). Don't
+disable Gatekeeper.
 
 ## Verify
 
