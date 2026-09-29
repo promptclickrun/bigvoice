@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bigvoice · Offline dictation for macOS</title>
+<meta name="description" content="A small model. A big voice. Native, offline dictation for macOS. Speech recognition runs entirely on your Mac: no account, no cloud, no subscription.">
+<meta name="theme-color" content="#0E0C0A">
+<meta property="og:title" content="bigvoice · A small model. A big voice.">
+<meta property="og:description" content="Native, offline dictation for macOS. No account, no cloud, no subscription.">
+<meta property="og:image" content="https://promptclickrun.github.io/bigvoice/img/dictation-listening.webp">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/BricolageGrotesque-Variable.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="fonts/Geist-Variable.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="./" aria-label="bigvoice home">
+    <span class="mark mark--sm" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+    <span class="wordmark">bigvoice</span>
+  </a>
+  <nav class="top-nav" aria-label="Page">
+    <a href="#how">How it works</a>
+    <a href="#models">Models</a>
+    <a href="#privacy">Privacy</a>
+    <a href="https://github.com/promptclickrun/bigvoice">GitHub</a>
+    <a class="btn btn--primary btn--nav" data-download data-short href="https://github.com/promptclickrun/bigvoice/releases/latest">Download</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-mark mark mark--xl" data-mark aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="eyebrow">Offline dictation · macOS</p>
+    <h1>A small model.<br><span class="loud">A big voice.</span></h1>
+    <p class="lede">Hold a shortcut in any app, speak, and your words land where your cursor is. Speech recognition runs entirely on your Mac: no account, no cloud, no subscription.</p>
+
+    <div class="cta">
+      <a class="btn btn--primary" id="download" href="https://github.com/promptclickrun/bigvoice/releases/latest" data-state="idle">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="11" y="2" width="2" height="12" rx="1"/><rect x="11" y="7" width="2" height="7" rx="1" transform="rotate(45 12 13)"/><rect x="11" y="7" width="2" height="7" rx="1" transform="rotate(-45 12 13)"/><rect x="4" y="20" width="16" height="2" rx="1"/></svg>
+        <span>Download latest</span>
+      </a>
+      <a class="btn btn--outline" href="https://github.com/promptclickrun/bigvoice">View source</a>
+    </div>
+    <p class="meta mono" id="release-meta">macOS 14+ · Apple Silicon</p>
+  </section>
+
+  <section class="shot">
+    <picture>
+      <img src="img/dictation-listening.webp" width="1600" height="1147" alt="The bigvoice window while listening: a live orange waveform, a 0:04 timer, and the live transcript with the newest word in orange.">
+    </picture>
+  </section>
+
+  <section class="section" id="how">
+    <p class="kicker mono">01 — How it works</p>
+    <h2>Two ways to get a word in.</h2>
+    <div class="cards two">
+      <article class="card card--active">
+        <h3>Push to talk</h3>
+        <p>Hold to speak. Release to insert.</p>
+        <div class="keys"><kbd class="on">⌃</kbd><kbd class="on">⌥</kbd><kbd class="on wide">Space</kbd></div>
+      </article>
+      <article class="card">
+        <h3>Hands-free</h3>
+        <p>Press once to start. Press again to finish.</p>
+        <div class="keys"><kbd>⌃</kbd><kbd>⌥</kbd><kbd class="wide">Return</kbd></div>
+      </article>
+    </div>
+    <p class="note"><kbd class="sm">esc</kbd> cancels. Both shortcuts are yours to change in Settings.</p>
+
+    <figure class="capsules">
+      <img src="img/capsule-listening.webp" width="1600" height="521" loading="lazy" alt="The floating capsule while listening, with live orange bars and a 0:04 timer.">
+      <img src="img/capsule-done.webp" width="1600" height="521" loading="lazy" alt="The floating capsule after delivery, with a check mark.">
+      <figcaption>The capsule floats above the Dock in every Space. It never takes focus and resizes to what it has to say.</figcaption>
+    </figure>
+  </section>
+
+  <section class="section" id="style">
+    <p class="kicker mono">02 — Style</p>
+    <h2>Say it loosely. Send it ready.</h2>
+    <p class="body">Speech models write down every um, every doubled word, and the Tuesday you took back. Choose how much of that reaches the app, and how your words should sound in each one. Tone follows the app you're in: professional in Mail, relaxed in Messages, exact in your editor and terminal.</p>
+    <div class="cards two">
+      <article class="card">
+        <h3>Verbatim</h3>
+        <p>Exactly what the speech model heard. Nothing added, nothing taken away.</p>
+      </article>
+      <article class="card">
+        <h3>Clean</h3>
+        <p>Ums, stutters, and self-corrections gone. Capitals and periods fixed. Instant, rules only.</p>
+      </article>
+      <article class="card card--active">
+        <h3>Polished</h3>
+        <p>Grammar and punctuation fixed by the language model already built into macOS. Your words and order stay yours.</p>
+      </article>
+      <article class="card">
+        <h3>Refined</h3>
+        <p>Tightened into a ready-to-send message in the tone each app calls for.</p>
+      </article>
+    </div>
+    <div class="shot shot--inset">
+      <img src="img/style.webp" width="1348" height="1433" loading="lazy" alt="The bigvoice Style page: a level control set to Polished, and cards for Messages, Email, and Documents showing what was heard, with fillers struck through, above the finished text in each app's tone.">
+    </div>
+    <p class="note">A model can tidy your words, never change them. Every rewrite is checked against what you said; if it adds facts, answers your question, or drops part of it, bigvoice pastes the Clean version and tells you why.</p>
+  </section>
+
+  <section class="section">
+    <p class="kicker mono">03 — Why bigvoice</p>
+    <h2>On your Mac. Off the cloud.</h2>
+    <div class="cards three">
+      <article class="card">
+        <h3>Two engines, one app</h3>
+        <p>whisper.cpp on Metal for Whisper GGML models, and ONNX Runtime GenAI for streaming Nemotron Speech.</p>
+      </article>
+      <article class="card">
+        <h3>Reuses what you have</h3>
+        <p>bigvoice finds speech models already on your Mac, including the one the GitHub Copilot app downloads, and uses them in place. Nothing is downloaded twice.</p>
+      </article>
+      <article class="card">
+        <h3>Live transcript</h3>
+        <p>Words appear while you speak. The final pass after you stop is always authoritative.</p>
+      </article>
+      <article class="card">
+        <h3>Works in any app</h3>
+        <p>Runs from the menu bar and pastes into the app you were using. It checks the focus and the inserted text before doing anything.</p>
+      </article>
+      <article class="card">
+        <h3>Never the wrong field</h3>
+        <p>If focus changes while you dictate, bigvoice doesn't insert. Password fields are never filled. Auto-Return is off by default.</p>
+      </article>
+      <article class="card">
+        <h3>Clipboard respected</h3>
+        <p>Your clipboard is restored after insertion, and a newer copy is never overwritten.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="models">
+    <p class="kicker mono">04 — Models</p>
+    <h2>Use what you have before downloading more.</h2>
+    <p class="body">At launch bigvoice looks through Copilot's model cache, MacWhisper, superwhisper, VoiceInk, Handy, whisper.cpp and Hugging Face caches, and Spotlight. Need more? Install one of five MIT-licensed Whisper models (32 MB to 190 MB) in one click. Every download is SHA-256 verified.</p>
+    <div class="shot shot--inset">
+      <img src="img/models-full.webp" width="1348" height="1600" loading="lazy" alt="The bigvoice Models page: a model already on this Mac and a catalog of Whisper models with disk sizes drawn to scale.">
+    </div>
+  </section>
+
+  <section class="section" id="privacy">
+    <p class="kicker mono">05 — Privacy</p>
+    <h2>Your audio stays on this Mac.</h2>
+    <ul class="facts">
+      <li><span class="dot" aria-hidden="true"></span>Audio is held in memory and discarded after each transcription.</li>
+      <li><span class="dot" aria-hidden="true"></span>No telemetry, no account, and no cloud transcription.</li>
+      <li><span class="dot" aria-hidden="true"></span>Only model installation touches the network. Style's rewriting runs on this Mac too.</li>
+      <li><span class="dot" aria-hidden="true"></span>The app never logs transcript content.</li>
+    </ul>
+  </section>
+
+  <section class="section install" id="install">
+    <p class="kicker mono">06 — Install</p>
+    <h2>Three steps. Then just talk.</h2>
+    <ol class="steps">
+      <li><span class="n mono">1</span><div><strong>Unzip and move <code>bigvoice.app</code> to Applications.</strong></div></li>
+      <li><span class="n mono">2</span><div><strong>Open it and allow Microphone and Accessibility</strong> from the setup steps.</div></li>
+      <li><span class="n mono">3</span><div><strong>Click into any text field, hold <kbd>⌃ ⌥ Space</kbd>, and speak.</strong> Developer ID releases are notarized by Apple and open like any other Mac app; if macOS asks about a build, choose Open Anyway in Privacy &amp; Security.</div></li>
+    </ol>
+    <div class="cta cta--center">
+      <a class="btn btn--primary" data-download href="https://github.com/promptclickrun/bigvoice/releases/latest">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="11" y="2" width="2" height="12" rx="1"/><rect x="11" y="7" width="2" height="7" rx="1" transform="rotate(45 12 13)"/><rect x="11" y="7" width="2" height="7" rx="1" transform="rotate(-45 12 13)"/><rect x="4" y="20" width="16" height="2" rx="1"/></svg>
+        <span>Download latest</span>
+      </a>
+      <a class="link" href="https://github.com/promptclickrun/bigvoice/releases">All releases</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span class="mark mark--xs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+  <span>bigvoice · on your Mac, off the cloud</span>
+  <span class="mono dim">Bricolage Grotesque · Geist · Geist Mono (SIL OFL 1.1)</span>
+</footer>
+
+<script src="app.js" defer></script>
+</body>
+</html>
