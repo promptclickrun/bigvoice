@@ -8,10 +8,13 @@ import OSLog
 struct DictationDestination {
     let pid: pid_t
     let name: String
+    let bundleID: String?
     let element: AXUIElement?
     let window: AXUIElement?
     let value: String?
     let selection: NSRange?
+
+    var context: WritingContext { WritingContext.classify(bundleIdentifier: bundleID) }
 
     @MainActor
     static func capture() -> DictationDestination? {
@@ -21,6 +24,7 @@ struct DictationDestination {
         let element = Accessibility.element(appElement, kAXFocusedUIElementAttribute)
         return DictationDestination(
             pid: application.processIdentifier, name: application.localizedName ?? "your app",
+            bundleID: application.bundleIdentifier,
             element: element, window: Accessibility.element(appElement, kAXFocusedWindowAttribute),
             value: element.flatMap { Accessibility.string($0, kAXValueAttribute) },
             selection: element.flatMap(Accessibility.selection)

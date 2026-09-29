@@ -77,8 +77,10 @@ Five rounded bars (bar .11, gap .085 of the mark size; dot .38).
 ## Icons
 
 Built from the mark's parts on a 24-unit grid with a 2-unit stroke; each has one
-gesture on hover or when active: wave (Dictation), stack (Models), sliders
-(Settings), mic, lock, download, key, check, close, rescan, stop.
+gesture on hover or when active: wave (Dictation), style (Style: ragged lines
+and a stray mark tidy into an even paragraph, the stray landing as its period),
+stack (Models), sliders (Settings), mic, lock, download, key, check, close,
+rescan, stop.
 
 ## Components
 
@@ -94,12 +96,30 @@ gesture on hover or when active: wave (Dictation), stack (Models), sliders
 - **Size bar.** Disk size drawn to scale (180 pt = largest model), install
   progress as Signal fill.
 - **Capsule.** 62 pt, Char, .14 border, 0 14 40 shadow. Widths: arming 232,
-  listening 372, working and delivered 262. A pill instruction sits above it.
+  listening 372, working and delivered 262, polishing 300 (names the tone).
+  A pill instruction sits above it.
+- **Level axis.** The Style hero: four stops on a 4 pt hairline track, Signal
+  fill up to the chosen stop, 22 pt paper knob. Drag, click, arrow keys, or
+  VoiceOver adjust it; the level changes as the knob crosses each stop. The
+  level name is Bricolage at 34 pt whose weight tracks how much bigvoice does
+  (330 Verbatim, 470 Clean, 610 Polished, 760 Refined).
+- **Tone switch.** A segmented capsule on Ink with a Surface highlight that
+  slides between tones on Settle. Neutral, never Signal.
+- **Specimen.** Two lines per app: what was heard (13 pt stone, led by the
+  static listening mark) and what lands (15.5 pt paper, led by the caret mark).
+  Removed words keep their place with a strike drawn left to right on Swell,
+  staggered 28 ms. Changed words re-land individually. While a model works, a
+  slow highlight travels across the current words; it stops when they settle.
+- **Heard and Final.** The Dictation stage can show either version; a caution
+  line explains any polish that stepped back to Clean.
 - **Toasts.** Char, radius 16, bottom-center; info dismisses after 4.5 s.
 
 ## Layout
 
 Window 1116 × 800 (minimum 900 × 660). Sidebar 236 pt Char with a sliding nav
-highlight; content max width 880 with 48 pt side padding. Page order and copy
-follow the spec, plus a setup section (model, microphone, Accessibility with
-Repair) shown only until ready.
+highlight; content max width 880 with 48 pt side padding. Pages: Dictation,
+Style, Models, Settings (⌘1–⌘4). Page order and copy follow the spec, plus a
+setup section (model, microphone, Accessibility with Repair) shown only until
+ready, and Style, which extends the spec: the level axis, then one full-width
+specimen card per app context (Messages, Email, Documents, Code, Everywhere
+else), then your words, instructions, and the writing engine.

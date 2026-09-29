@@ -39,6 +39,7 @@ struct RootView: View {
     @ViewBuilder private var page: some View {
         switch controller.page {
         case .dictation: DictationView(controller: controller, meter: controller.meter)
+        case .style: StyleView(controller: controller, preview: controller.stylePreview)
         case .models: ModelsView(controller: controller)
         case .settings: SettingsView(controller: controller)
         }
@@ -50,7 +51,7 @@ struct Sidebar: View {
     @Namespace private var selection
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    private let items: [(AppPage, BrandGlyph)] = [(.dictation, .wave), (.models, .stack), (.settings, .sliders)]
+    private let items: [(AppPage, BrandGlyph)] = [(.dictation, .wave), (.style, .style), (.models, .stack), (.settings, .sliders)]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {

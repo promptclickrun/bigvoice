@@ -67,8 +67,32 @@ public struct Preferences: Codable, Equatable, Sendable {
     public var language = "auto"
     public var searchFolders: [String] = []
     public var modelFiles: [String] = []
+    public var style = StylePreferences()
 
     public init() {}
+
+    private enum CodingKeys: String, CodingKey {
+        case selectedModelPath, inputDeviceUID, pushToTalk, handsFree, autoSend, startSound, stopSound
+        case restoreClipboard, language, searchFolders, modelFiles, style
+    }
+
+    /// Settings saved by an older build lack newer keys. Missing values take their defaults so an
+    /// upgrade never resets shortcuts or the chosen model.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        selectedModelPath = try container.decodeIfPresent(String.self, forKey: .selectedModelPath)
+        inputDeviceUID = try container.decodeIfPresent(String.self, forKey: .inputDeviceUID) ?? inputDeviceUID
+        pushToTalk = try container.decodeIfPresent(KeyShortcut.self, forKey: .pushToTalk) ?? pushToTalk
+        handsFree = try container.decodeIfPresent(KeyShortcut.self, forKey: .handsFree) ?? handsFree
+        autoSend = try container.decodeIfPresent(Bool.self, forKey: .autoSend) ?? autoSend
+        startSound = try container.decodeIfPresent(Bool.self, forKey: .startSound) ?? startSound
+        stopSound = try container.decodeIfPresent(Bool.self, forKey: .stopSound) ?? stopSound
+        restoreClipboard = try container.decodeIfPresent(Bool.self, forKey: .restoreClipboard) ?? restoreClipboard
+        language = try container.decodeIfPresent(String.self, forKey: .language) ?? language
+        searchFolders = try container.decodeIfPresent([String].self, forKey: .searchFolders) ?? searchFolders
+        modelFiles = try container.decodeIfPresent([String].self, forKey: .modelFiles) ?? modelFiles
+        style = (try? container.decodeIfPresent(StylePreferences.self, forKey: .style)) ?? StylePreferences()
+    }
 
     public func validateShortcuts() throws {
         guard pushToTalk.isValid, handsFree.isValid else { throw ShortcutValidationError.invalid }

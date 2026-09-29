@@ -14,6 +14,10 @@ recognition runs entirely on your Mac: no account, no cloud, no subscription.
 - **Live transcript.** Words appear while you speak: Nemotron streams
   incrementally; Whisper re-transcribes on a relaxed cadence. The final pass
   after you stop is always authoritative.
+- **From verbatim to ready to send.** One level control decides how far
+  bigvoice moves from what it heard: fillers, stutters, and self-corrections
+  removed instantly by rules, then grammar and tone by the language model
+  already built into macOS. Each app gets its own tone.
 - **Works in any app**, from the menu bar, with a floating capsule that never
   takes focus and resizes to what it has to say.
 
@@ -83,6 +87,74 @@ best-effort paste, no Return, and the transcript stays in bigvoice to copy.
 Clipboard restoration is on by default and never overwrites a newer copy. The
 app never logs transcript content.
 
+## Style
+
+![Style](design/renders/style-full.png)
+
+Speech models write down everything, including "um", "uh", doubled words, and
+the Tuesday you took back. **Style** decides how much of that reaches the app.
+
+| Level | What happens | Cost |
+| --- | --- | --- |
+| **Verbatim** | Exactly what the speech model heard | None |
+| **Clean** | Rules remove fillers, stutters, and like-for-like self-corrections ("Tuesday, actually no, Wednesday"; "Jake, I mean Jane"; "scratch that"), then fix capitals and closing punctuation | Instant |
+| **Polished** (default) | A local language model also fixes grammar and punctuation, keeping your words and order | About 0.3 to 1 s |
+| **Refined** | The model tightens and restructures in the chosen tone, formatting spoken lists as lists | About 0.4 to 1 s |
+
+Every level shows live: the transcript under the capsule is cleaned as you
+speak, and the Dictation page can switch between **Final** and **Heard**.
+
+**Tone follows the app.** bigvoice classifies the app that had focus when you
+started (Messages and chat, Email, Documents and notes, Code and terminals,
+everything else) and applies that context's tone: Natural, Professional,
+Friendly, Casual (lowercase, texting style), or Technical (code terms kept
+exact; short commands like `git status` are never capitalized or punctuated).
+Defaults are Professional for email, Technical for code, Natural elsewhere.
+
+**Your words** are spelled your way at every level, even Verbatim; add what the
+speech model tends to hear instead and bigvoice swaps it. **Spoken punctuation**
+(opt-in) turns "comma", "question mark", "new line", and "new paragraph" into
+symbols; "period" converts only at the end of a thought, so "trial period"
+stays a phrase. **Anything else** holds plain-language preferences for the model,
+such as "Use British spelling."
+
+### Writing engines
+
+Polished and Refined reuse a language model already on your Mac; nothing is
+downloaded.
+
+- **Apple Intelligence** (macOS 26 or later with Apple Intelligence on): the
+  on-device system model, adding nothing to disk. bigvoice weak-links it, so
+  macOS 14 and 15 still run and fall back to Clean.
+- **Ollama**: any chat model already pulled, over `127.0.0.1` only. Embedding
+  models are ignored.
+
+**Automatic** prefers Apple Intelligence, then Ollama. Rules always run first
+and the model only ever sees their output.
+
+### A model can tidy words, never change them
+
+Small models tend to follow instructions hidden in dictation ("write me a poem",
+"ignore previous instructions") or answer a question instead of writing it down.
+bigvoice frames the model as a proofreader, fences the dictation, caps the reply
+length, and then checks every answer before it's used. Polished must keep your
+words. Both levels are rejected for:
+
+- a number you didn't say
+- a name you didn't say
+- a greeting or sign-off you didn't say
+- a refusal
+- a question that stopped being a question
+- a request ("tell me", "write") that lost its verb
+- a change of language
+- dropping too much of what you said
+
+A rejected Refined answer retries as Polished; anything else delivers the Clean
+text, and the reason appears under the transcript ("Clean used. Apple
+Intelligence added a number you didn't say."). Polishing has an eight-second
+budget and Esc cancels it. Dictations over 1,000 words are cleaned, not
+rewritten.
+
 ## Models
 
 ![Models](design/renders/models-full.png)
@@ -118,7 +190,9 @@ modified or deleted.
 Audio is held in memory and discarded after each transcription. The latest
 transcript lives in memory until you clear it or quit. There's no telemetry,
 account, or cloud transcription; ONNX Runtime telemetry is disabled before the
-runtime can initialize. Only model installation touches the network.
+runtime can initialize. Only model installation touches the network. Polish
+runs on Apple's on-device model or on Ollama at `127.0.0.1`; the app's only
+plain-HTTP exception is for local networking.
 Preferences and paths to reused models are stored in `UserDefaults`
 (`com.bigvoice.mac`). The app isn't sandboxed because inserting text into other
 apps and reusing model files elsewhere on disk require it.
@@ -165,9 +239,12 @@ swift run bigvoice-check scan
 The regression runner needs only Command Line Tools and covers shortcut rules,
 session lifecycle, silence, GGML headers, ONNX bundle validation (unsafe
 references, native-code options, missing components, revision changes),
-discovery deduplication and Copilot-cache reuse, checksums, and
-insertion/send/clipboard safety. Real inference, including live streaming, runs
-when you provide fixtures:
+discovery deduplication and Copilot-cache reuse, checksums,
+insertion/send/clipboard safety, and Style: cleaning rules, the answer guard,
+prompt fencing, preference migration, and the Ollama client against a local
+stub (timeouts and cancellation included). When Apple Intelligence is on, it
+also polishes real text on this Mac. Real speech inference, including live
+streaming, runs when you provide fixtures:
 
 ```sh
 BIGVOICE_TEST_MODEL=/path/to/ggml-model.bin \
@@ -177,10 +254,12 @@ BIGVOICE_TEST_PHRASE="a phrase in that recording" \
 swift run bigvoice-tests
 ```
 
-To check the exact shipped bundle, transcribe a file with its own engines:
+To check the exact shipped bundle, transcribe a file with its own engines, and
+run text through the Style pipeline:
 
 ```sh
 dist/bigvoice.app/Contents/MacOS/bigvoice --transcribe /path/to/model /path/to/speech.wav
+dist/bigvoice.app/Contents/MacOS/bigvoice --polish "um so the the build is green" --level refined --tone casual --context messages
 ```
 
 Microphone capture and insertion into other apps still deserve a hands-on check
@@ -189,8 +268,8 @@ usual apps before turning on automatic Return.
 
 ## Layout
 
-- `BigvoiceCore`: model catalog, GGML and ONNX inspection, discovery, preferences, lifecycle, safety rules.
-- `BigvoiceRuntime`: engine router, whisper.cpp actor, ONNX Runtime GenAI binding and streaming sessions, verified installer, audio conversion.
+- `BigvoiceCore`: model catalog, GGML and ONNX inspection, discovery, preferences, lifecycle, safety rules, Style (cleaning rules, prompts, answer guard).
+- `BigvoiceRuntime`: engine router, whisper.cpp actor, ONNX Runtime GenAI binding and streaming sessions, verified installer, audio conversion, text polisher (Apple Intelligence and Ollama).
 - `Bigvoice`: AppKit lifecycle, capture and level meter, Carbon shortcuts, Accessibility insertion, SwiftUI interface, capsule, menu bar glyph.
 - `BigvoiceCheck`: read-only discovery and offline transcription diagnostics.
 - `Tests/BigvoiceTests`: dependency-free regression runner.

@@ -50,6 +50,7 @@ private struct Stage: View {
     @ObservedObject var controller: AppController
     @ObservedObject var meter: LevelMeter
     @State private var copied = false
+    @State private var showHeard = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var recording: Bool { controller.phase.isRecording }
@@ -61,14 +62,32 @@ private struct Stage: View {
         return .idle
     }
 
+    /// Heard and final differ whenever cleanup or polish changed something worth comparing.
+    private var canCompare: Bool {
+        !controller.busy && !controller.lastHeard.isEmpty && controller.lastHeard != controller.lastTranscript
+    }
+
     private var transcript: String {
-        controller.busy ? controller.liveTranscript : controller.lastTranscript
+        if controller.busy { return controller.liveTranscript }
+        return showHeard && canCompare ? controller.lastHeard : controller.lastTranscript
     }
 
     private var transcriptLabel: String {
         if recording { return "LIVE TRANSCRIPT" }
-        if !controller.busy && !controller.lastTranscript.isEmpty { return "LAST DICTATION · MEMORY ONLY" }
+        if controller.polishing { return "POLISHING ON THIS MAC" }
+        if !controller.busy && !controller.lastTranscript.isEmpty {
+            if showHeard && canCompare { return "AS HEARD · BEFORE ANY CLEANUP" }
+            if let outcome = controller.lastOutcome { return "LAST DICTATION · \(outcome.summary.uppercased())" }
+            return "LAST DICTATION · MEMORY ONLY"
+        }
         return "TRANSCRIPT"
+    }
+
+    /// Why polish stepped back to Clean, in the product's words.
+    private var fallbackNote: String? {
+        guard !controller.busy, !(showHeard && canCompare), let outcome = controller.lastOutcome,
+              let note = outcome.note, outcome.applied < outcome.requested else { return nil }
+        return "\(outcome.applied.title) used. \(String(note.prefix(1)).uppercased() + String(note.dropFirst()))."
     }
 
     var body: some View {
@@ -88,9 +107,17 @@ private struct Stage: View {
             }
             Palette.line(0.07).frame(height: 1)
             VStack(alignment: .leading, spacing: 10) {
-                MonoLabel(text: transcriptLabel)
-                    .contentTransition(.opacity)
-                    .animation(Motion.fade, value: transcriptLabel)
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    MonoLabel(text: transcriptLabel)
+                        .contentTransition(.opacity)
+                        .animation(Motion.fade, value: transcriptLabel)
+                    Spacer(minLength: 8)
+                    if canCompare {
+                        HeardFinalSwitch(showHeard: $showHeard)
+                            .transition(.crossfade)
+                    }
+                }
+                .animation(Motion.settle, value: canCompare)
                 ZStack(alignment: .topLeading) {
                     Text("Your words appear here as you speak. Practice mode never pastes or sends.")
                         .font(BrandFont.ui(17))
@@ -99,12 +126,22 @@ private struct Stage: View {
                         .opacity(transcript.isEmpty ? 1 : 0)
                         .animation(Motion.fade, value: transcript.isEmpty)
                     TranscriptWords(text: transcript, emphasizeNewest: recording,
-                                    tone: working ? Palette.stone : Palette.paper)
+                                    tone: working || (showHeard && canCompare) ? Palette.stone : Palette.paper)
                 }
                 .frame(maxWidth: .infinity, minHeight: 62, alignment: .topLeading)
+                if let fallbackNote {
+                    HStack(alignment: .top, spacing: 8) {
+                        Circle().fill(Palette.caution).frame(width: 6, height: 6).padding(.top, 5)
+                        Text(fallbackNote).font(BrandFont.ui(12.5)).foregroundStyle(Palette.caution)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .transition(.crossfade)
+                }
             }
+            .animation(Motion.settle, value: fallbackNote)
             controls
         }
+        .onChange(of: controller.busy) { _, busy in if busy { showHeard = false } }
         .padding(26)
         .background(RoundedRectangle(cornerRadius: 26, style: .continuous).fill(Palette.char))
         .overlay(RoundedRectangle(cornerRadius: 26, style: .continuous)
@@ -147,7 +184,7 @@ private struct Stage: View {
                 } else if !controller.lastTranscript.isEmpty {
                     HoverReader { hovering in
                         Button {
-                            if controller.copyTranscript() { flashCopied() }
+                            if controller.copyTranscript(heard: showHeard && canCompare) { flashCopied() }
                         } label: {
                             HStack(spacing: 8) {
                                 BrandIcon(glyph: .check, on: copied || hovering, size: 16,
@@ -314,6 +351,20 @@ private struct MetaRow: View {
                 Text(controller.devices.name(for: preferences.inputDeviceUID))
             }
             Spacer(minLength: 8)
+            HoverReader { hovering in
+                Button { controller.page = .style } label: {
+                    HStack(spacing: 8) {
+                        BrandIcon(glyph: .style, on: hovering, size: 14, color: hovering ? Palette.paper : Palette.stone,
+                                  background: Palette.ink)
+                        Text(styleSummary(preferences.style))
+                            .foregroundStyle(hovering ? Palette.paper : Palette.stone)
+                    }
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .help("Open Style")
+            }
+            Spacer(minLength: 8)
             HStack(spacing: 8) {
                 BrandIcon(glyph: .key, on: false, size: 14, color: Palette.stone, background: Palette.ink)
                 Text(preferences.autoSend ? "Presses Return after inserting" : "You decide when to send")
@@ -321,5 +372,39 @@ private struct MetaRow: View {
         }
         .font(BrandFont.ui(12.5))
         .foregroundStyle(Palette.stone)
+    }
+
+    private func styleSummary(_ style: StylePreferences) -> String {
+        switch style.level {
+        case .verbatim: return "Verbatim · exactly as heard"
+        case .clean: return "Clean · fillers removed"
+        case .polished, .refined:
+            return controller.writingEngine == nil ? "\(style.level.title) · falls back to Clean" : "\(style.level.title) · tone follows the app"
+        }
+    }
+}
+
+/// Final and Heard, side by side in one quiet switch.
+private struct HeardFinalSwitch: View {
+    @Binding var showHeard: Bool
+
+    var body: some View {
+        HStack(spacing: 14) {
+            ForEach([false, true], id: \.self) { heard in
+                let active = showHeard == heard
+                Button(heard ? "Heard" : "Final") {
+                    withAnimation(Motion.settle) { showHeard = heard }
+                }
+                .buttonStyle(.plain)
+                .font(BrandFont.ui(12, weight: active ? 600 : 500))
+                .foregroundStyle(active ? Palette.paper : Palette.stone)
+                .overlay(alignment: .bottom) {
+                    Capsule().fill(Palette.paper).frame(height: 1.5).offset(y: 4).opacity(active ? 1 : 0)
+                }
+                .accessibilityAddTraits(active ? .isSelected : [])
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Show transcript")
     }
 }

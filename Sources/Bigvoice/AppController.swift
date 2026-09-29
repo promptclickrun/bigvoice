@@ -8,14 +8,23 @@ import OSLog
 import ServiceManagement
 
 enum AppPage: String, CaseIterable, Identifiable {
-    case dictation = "Dictation", models = "Models", settings = "Settings"
+    case dictation = "Dictation", style = "Style", models = "Models", settings = "Settings"
     var id: String { rawValue }
     var symbol: String {
         switch self {
         case .dictation: return "waveform"
+        case .style: return "text.alignleft"
         case .models: return "square.stack.3d.up"
         case .settings: return "slider.horizontal.3"
         }
+    }
+}
+
+extension PolishOutcome {
+    /// One line for the capsule and the delivered moment: what was applied, and whether polish stepped back.
+    var deliveredDetail: String {
+        if requested.usesLanguageModel && applied == .clean { return "Clean · polish skipped" }
+        return summary
     }
 }
 
@@ -60,6 +69,8 @@ final class AppController: ObservableObject {
     let meter = LevelMeter()
     private let capture = AudioCapture()
     private let transcriber = NativeTranscriber()
+    let polisher = TextPolisher()
+    let stylePreview = StylePreview()
     private let delivery = TextDelivery()
     private var lifecycle = CaptureLifecycle()
     private var sessionID = UUID()
@@ -72,6 +83,8 @@ final class AppController: ObservableObject {
     private var destination: DictationDestination?
     private var mode: DictationMode = .handsFree
     private var sessionPreferences = Preferences()
+    private var sessionContext: WritingContext = .other
+    private var sessionAppName: String?
     private var sessionWarning: String?
     private var cancellables = Set<AnyCancellable>()
     private var retainedSound: NSSound?
@@ -102,8 +115,21 @@ final class AppController: ObservableObject {
     @Published private(set) var activationPulse = 0
     /// Words recognized so far in the current session; replaced by the final transcript.
     @Published private(set) var liveTranscript = ""
+
+    /// The style the current dictation is being written in, for the capsule and stage.
+    var sessionStyleLabel: String {
+        let style = sessionPreferences.style
+        return "\(style.tone(for: sessionContext).title) · on your Mac"
+    }
     /// A brief "delivered" moment after words land: the mark closes into a check.
     @Published private(set) var delivered: Delivery?
+    /// True while a local writing model turns the transcript into finished text.
+    @Published private(set) var polishing = false
+    /// What the speech model heard, before any cleaning, for the Heard view.
+    @Published private(set) var lastHeard = ""
+    @Published private(set) var lastOutcome: PolishOutcome?
+    @Published private(set) var writingStatus = WritingEngineStatus(appleIntelligence: TextPolisher.appleIntelligenceState,
+                                                                   ollama: OllamaState())
     private var liveTask: Task<Void, Never>?
     private var deliveredTask: Task<Void, Never>?
     private var streamActive = false
@@ -131,6 +157,10 @@ final class AppController: ObservableObject {
         }
         delivery.onWarning = { [weak self] message in
             self?.notice = AppNotice(title: "Clipboard needs attention", detail: message, kind: .warning)
+        }
+        stylePreview.polish = { [weak self] text, style, context in
+            guard let self else { throw CancellationError() }
+            return try await self.previewPolish(text, style: style, context: context)
         }
     }
 
@@ -164,7 +194,7 @@ final class AppController: ObservableObject {
             return "Your voice, right where you need it."
         case .arming: return "Getting ready to listen"
         case .recording: return "Go ahead. You're being heard."
-        case .transcribing: return "Turning your voice into words"
+        case .transcribing: return polishing ? "Polishing your words" : "Turning your voice into words"
         case .inserting: return "Putting your words in place"
         }
     }
@@ -195,6 +225,7 @@ final class AppController: ObservableObject {
     func launch() {
         configureShortcuts()
         Task { await rescan() }
+        refreshWritingStatus()
         if let error = preferences.error {
             notice = AppNotice(title: "Preferences were reset", detail: error, kind: .warning)
         }
@@ -354,6 +385,8 @@ final class AppController: ObservableObject {
         sessionMode = mode
         destination = target
         sessionPreferences = preferences.value
+        sessionContext = target?.context ?? .other
+        sessionAppName = target?.name
         sessionWarning = nil
         meter.reset()
         notice = nil
@@ -373,6 +406,8 @@ final class AppController: ObservableObject {
                 if self.lifecycle.stopRequested { self.finishEarlyRelease(); return }
                 // Load weights while the microphone is live, so a cold model never delays speaking.
                 self.warmUp(model, session: id)
+                let style = self.sessionPreferences.style, context = self.sessionContext, appName = self.sessionAppName
+                Task { [polisher = self.polisher] in await polisher.prewarm(style: style, context: context, appName: appName) }
                 if self.sessionPreferences.startSound {
                     let wait = self.playSound(.start)
                     try await Task.sleep(for: .seconds(min(0.3, wait)))
@@ -442,7 +477,7 @@ final class AppController: ObservableObject {
                             self.streamedCount += fresh.count
                             let text = try await self.transcriber.feedStream(fresh)
                             if self.sessionID == id, self.phase.isRecording {
-                                self.liveTranscript = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                                self.liveTranscript = self.livePreview(text)
                             }
                         }
                         try await Task.sleep(for: .milliseconds(240))
@@ -465,10 +500,20 @@ final class AppController: ObservableObject {
                     let text = try? await self.transcriber.transcribe(samples: self.capture.samples(from: 0), model: model, language: language)
                     let elapsed = ContinuousClock.now - started
                     pause = max(.milliseconds(900), elapsed * 1.5)
-                    if let text, self.sessionID == id, self.phase.isRecording { self.liveTranscript = text }
+                    if let text, self.sessionID == id, self.phase.isRecording { self.liveTranscript = self.livePreview(text) }
                 }
             }
         }
+    }
+
+    /// Live words are cleaned with the same rules as the final text (never a closing period mid-thought),
+    /// so fillers vanish as you speak instead of flashing and disappearing at the end.
+    private func livePreview(_ text: String) -> String {
+        let style = sessionPreferences.style
+        guard style.level >= .clean else { return text.trimmingCharacters(in: .whitespacesAndNewlines) }
+        let english = TranscriptCleaner.isEnglish(text, language: sessionPreferences.language)
+        return TranscriptCleaner.clean(text, options: CleanerOptions(style: style, context: sessionContext,
+                                                                     english: english, closeSentence: false))
     }
 
     private func showDelivered(title: String, detail: String, instruction: String) {
@@ -525,21 +570,39 @@ final class AppController: ObservableObject {
                 }
                 try Task.checkCancellation()
                 guard self.sessionID == id else { return }
-                self.liveTranscript = text
-                self.lastTranscript = text
+                let style = self.sessionPreferences.style
+                self.lastHeard = text
+                self.liveTranscript = self.livePreview(text)
+                if style.level.usesLanguageModel {
+                    self.polishing = true
+                    self.onStateChange?()
+                }
+                let outcome = try await self.polisher.polish(text, style: style, context: self.sessionContext,
+                                                             appName: self.sessionAppName, language: selectedLanguage)
+                try Task.checkCancellation()
+                guard self.sessionID == id else { return }
+                self.polishing = false
+                self.lastOutcome = outcome
+                guard !outcome.text.isEmpty else {
+                    self.finish()
+                    self.report("Nothing to insert", "Only filler sounds were heard, so nothing was pasted or sent.", kind: .info)
+                    return
+                }
+                self.liveTranscript = outcome.text
+                self.lastTranscript = outcome.text
                 self.lastTranscriptDate = Date()
                 producedTranscript = true
                 if self.mode == .practice {
                     self.lastDelivery = "Practice complete. Nothing was pasted or sent."
                     self.finish()
-                    self.showDelivered(title: "Practice complete", detail: "Nothing was pasted or sent",
+                    self.showDelivered(title: "Practice complete", detail: outcome.deliveredDetail,
                                        instruction: "Practice · nothing is pasted")
                 } else if let destination = self.destination {
                     self.lifecycle.willInsert()
                     self.synchronizePhase()
                     let preferences = self.sessionPreferences
                     let result = try await self.delivery.deliver(
-                        text, to: destination, autoSend: preferences.autoSend, restoreClipboard: preferences.restoreClipboard
+                        outcome.text, to: destination, autoSend: preferences.autoSend, restoreClipboard: preferences.restoreClipboard
                     )
                     guard self.sessionID == id else { return }
                     self.lastDelivery = result.message
@@ -550,7 +613,7 @@ final class AppController: ObservableObject {
                     } else {
                         self.showDelivered(
                             title: result.sent ? "Sent in \(destination.name)" : "Inserted into \(destination.name)",
-                            detail: preferences.restoreClipboard ? "Clipboard restored" : "Entirely on your Mac",
+                            detail: outcome.deliveredDetail,
                             instruction: result.sent ? "Inserted · Return pressed" : "Inserted · you decide when to send"
                         )
                     }
@@ -591,6 +654,7 @@ final class AppController: ObservableObject {
         meterTimer = nil
         liveTask?.cancel()
         streamActive = false
+        if polishing { polishing = false }
         _ = capture.stop()
         lifecycle.reset()
         destination = nil
@@ -845,11 +909,12 @@ final class AppController: ObservableObject {
 
     /// Returns whether the copy succeeded so the button can confirm in place.
     @discardableResult
-    func copyTranscript() -> Bool {
-        guard !lastTranscript.isEmpty else { return false }
+    func copyTranscript(heard: Bool = false) -> Bool {
+        let text = heard ? lastHeard : lastTranscript
+        guard !text.isEmpty else { return false }
         delivery.restorePendingClipboard()
         NSPasteboard.general.clearContents()
-        guard NSPasteboard.general.setString(lastTranscript, forType: .string) else {
+        guard NSPasteboard.general.setString(text, forType: .string) else {
             notice = AppNotice(title: "Couldn't copy the text", detail: DeliveryError.clipboardWrite.localizedDescription, kind: .error)
             return false
         }
@@ -858,8 +923,50 @@ final class AppController: ObservableObject {
 
     func clearTranscript() {
         lastTranscript = ""
+        lastHeard = ""
+        lastOutcome = nil
         lastTranscriptDate = nil
         lastDelivery = ""
+    }
+
+    // MARK: - Style
+
+    func refreshWritingStatus() {
+        Task {
+            let status = await polisher.status()
+            if writingStatus != status { writingStatus = status }
+        }
+    }
+
+    /// The engine Polished and Refined will use with the current settings, if any.
+    var writingEngine: WritingEngine? { writingStatus.engine(for: preferences.value.style) }
+
+    /// Runs the real pipeline on sample text for the Style page. Nothing is pasted.
+    func previewPolish(_ text: String, style: StylePreferences, context: WritingContext) async throws -> PolishOutcome {
+        try await polisher.polish(text, style: style, context: context, appName: nil,
+                                  language: preferences.value.language, budget: .seconds(12))
+    }
+
+    @discardableResult
+    func addVocabulary(term: String, heardAs: String) -> Bool {
+        let entry = VocabularyTerm(term: term, heardAs: heardAs.split(separator: ",").map(String.init))
+        guard !entry.term.isEmpty, entry.term.count <= 60 else { return false }
+        var style = preferences.value.style
+        guard style.vocabulary.count < StylePreferences.maximumVocabulary else {
+            notice = AppNotice(title: "Your word list is full", detail: "Remove a word to add another. The limit keeps polishing fast.", kind: .info)
+            return false
+        }
+        if let index = style.vocabulary.firstIndex(where: { $0.id == entry.id }) {
+            style.vocabulary[index].heardAs = Array(Set(style.vocabulary[index].heardAs + entry.heardAs)).sorted()
+        } else {
+            style.vocabulary.append(entry)
+        }
+        preferences.value.style = style
+        return true
+    }
+
+    func removeVocabulary(_ entry: VocabularyTerm) {
+        preferences.value.style.vocabulary.removeAll { $0.id == entry.id }
     }
 
     func setLoginEnabled(_ enabled: Bool) {
@@ -912,12 +1019,16 @@ final class AppController: ObservableObject {
     #if DEBUG
     func applyPreview(phase: DictationPhase, mode: DictationMode?, levels: [Float] = [], seconds: Int = 0,
                       transcript: String? = nil, live: String = "", delivered: Delivery? = nil,
-                      notice: AppNotice? = nil, permissions: (microphone: Bool, accessibility: Bool)? = nil) {
+                      notice: AppNotice? = nil, permissions: (microphone: Bool, accessibility: Bool)? = nil,
+                      heard: String? = nil, outcome: PolishOutcome? = nil, polishing: Bool = false) {
         self.phase = phase
         sessionMode = mode
         meter.loadPreview(levels, seconds: seconds)
         liveTranscript = live
         self.delivered = delivered
+        self.polishing = polishing
+        lastHeard = heard ?? transcript ?? ""
+        lastOutcome = outcome
         if let transcript {
             lastTranscript = transcript
             lastTranscriptDate = Date()
@@ -939,6 +1050,13 @@ final class AppController: ObservableObject {
         if preferences.value.selectedModelPath == nil, let model = preferredExistingModel {
             preferences.value.selectedModelPath = model.url.path
         }
+    }
+
+    /// Real engine status and real specimen results, so the Style render shows what this Mac produces.
+    func loadPreviewStyle() async {
+        writingStatus = await polisher.status()
+        stylePreview.update(style: preferences.value.style, engineKey: writingEngine?.label ?? "none", delay: .zero)
+        await stylePreview.settle()
     }
     #endif
 }

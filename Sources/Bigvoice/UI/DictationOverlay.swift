@@ -4,6 +4,7 @@ import SwiftUI
 
 enum CapsuleContent: Equatable {
     case arming, listening, transcribing, inserting
+    case polishing(String)
     case delivered(Delivery)
     case attention(kind: AppNotice.Kind, title: String, id: UUID)
 
@@ -12,6 +13,7 @@ enum CapsuleContent: Equatable {
         case .arming: return 232
         case .listening: return 372
         case .transcribing, .inserting, .delivered: return 262
+        case .polishing: return 300
         case .attention: return 300
         }
     }
@@ -20,7 +22,7 @@ enum CapsuleContent: Equatable {
         switch self {
         case .arming: return .dots
         case .listening: return .listen
-        case .transcribing: return .wave
+        case .transcribing, .polishing: return .wave
         case .inserting: return .caret
         case .delivered: return .check
         case .attention: return .idle
@@ -92,7 +94,8 @@ private struct CapsuleBody: View {
     @State private var hoveringClose = false
 
     private var listening: Bool { content == .listening }
-    private var working: Bool { content == .arming || content == .transcribing || content == .inserting }
+    private var isPolishing: Bool { if case .polishing = content { return true }; return false }
+    private var working: Bool { content == .arming || content == .transcribing || content == .inserting || isPolishing }
     private var isAttention: Bool { if case .attention = content { return true }; return false }
     private var isDelivered: Bool { if case .delivered = content { return true }; return false }
 
@@ -111,7 +114,7 @@ private struct CapsuleBody: View {
                     Elapsed(meter: meter)
                 }
                 .opacity(listening ? 1 : 0)
-                layer(title: workingTitle, detail: "Entirely on your Mac")
+                layer(title: workingTitle, detail: workingDetail)
                     .opacity(working ? 1 : 0)
                 layer(title: deliveredTitle, detail: deliveredDetail)
                     .opacity(isDelivered ? 1 : 0)
@@ -169,9 +172,15 @@ private struct CapsuleBody: View {
         switch content {
         case .arming: return "Getting ready"
         case .transcribing: return "Transcribing"
+        case .polishing: return "Polishing"
         case .inserting: return "Inserting"
         default: return " "
         }
+    }
+
+    private var workingDetail: String {
+        if case let .polishing(style) = content { return style }
+        return "Entirely on your Mac"
     }
 
     private var deliveredTitle: String { if case let .delivered(d) = content { return d.title }; return " " }
@@ -244,7 +253,7 @@ final class DictationOverlay {
             switch phase {
             case .arming: content = .arming
             case .recording: content = .listening
-            case .transcribing: content = .transcribing
+            case .transcribing: content = controller.polishing ? .polishing(controller.sessionStyleLabel) : .transcribing
             default: content = .inserting
             }
             present(content, instruction: instruction(for: content))
@@ -325,6 +334,7 @@ final class DictationOverlay {
                 ? "Press \(preferences.handsFree.parts.joined(separator: " ")) to finish"
                 : "Release \(preferences.pushToTalk.parts.joined(separator: " ")) to finish"
         case .transcribing: return "Transcribing offline · Esc to cancel"
+        case .polishing: return "Polishing on this Mac · Esc to cancel"
         case .inserting: return "Inserting into your original app"
         case .delivered(let delivery): return delivery.instruction
         case .attention: return ""

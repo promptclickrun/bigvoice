@@ -147,7 +147,7 @@ struct BarWaveform: View {
 // MARK: - Icons
 
 enum BrandGlyph {
-    case wave, stack, sliders, mic, lock, download, key, check, close, rescan, stop
+    case wave, stack, sliders, mic, lock, download, key, check, close, rescan, stop, style
 }
 
 /// Icons built from the mark's parts on a 24-unit grid with a 2-unit stroke. Each has one gesture,
@@ -258,6 +258,15 @@ struct BrandIcon: View {
             RescanArc(color: color, unit: u, on: on, spinning: spinning && !reduceMotion && !staticRendering)
         case .stop:
             Piece(frame: rect(6, 6, 12, 12), radius: 3 * u, fill: color)
+        case .style:
+            // Ragged lines and a stray mark tidy into an even paragraph; the stray lands as its period.
+            let widths: [CGFloat] = on ? [18, 18, 11] : [14, 18, 8]
+            ForEach(0..<3, id: \.self) { i in
+                Piece(frame: rect(3, [5, 11, 17][i], widths[i], 2), radius: u, fill: color)
+                    .animation(motion(Double(i) * 0.04), value: on)
+            }
+            Piece(frame: on ? rect(15.5, 16.75, 2.5, 2.5) : rect(19, 3.5, 3, 3), radius: 1.5 * u, fill: color)
+                .animation(motion(0.1), value: on)
         }
     }
 }

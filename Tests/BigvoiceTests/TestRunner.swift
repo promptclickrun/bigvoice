@@ -29,7 +29,7 @@ struct RegressionTest {
 struct TestRunner {
     static func main() async {
         let filter = CommandLine.arguments.dropFirst().first
-        let tests = (coreTests + modelTests + runtimeTests).filter {
+        let tests = (coreTests + styleTests + modelTests + runtimeTests + polishTests).filter {
             filter == nil || $0.name.localizedCaseInsensitiveContains(filter!)
         }
         guard !tests.isEmpty else {

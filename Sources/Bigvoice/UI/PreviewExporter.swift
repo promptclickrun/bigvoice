@@ -1,6 +1,7 @@
 #if DEBUG
 import AppKit
 import BigvoiceCore
+import BigvoiceRuntime
 import Foundation
 import SwiftUI
 
@@ -19,7 +20,11 @@ enum PreviewExporter {
         await controller.loadPreviewModels()
         let window = NSSize(width: 1116, height: 800)
         let phrase = "Move the design review to Thursday, and loop in the platform team before we lock the agenda."
+        let heard = "um so move the design review to uh thursday and loop in the the platform team before we lock the agenda"
+        let polished = PolishOutcome(text: phrase, heard: heard, requested: .polished, applied: .polished, tone: .natural,
+                                     context: .documents, engine: .appleIntelligence, milliseconds: 420)
         let ready = (microphone: true, accessibility: true)
+        await controller.loadPreviewStyle()
 
         for page in AppPage.allCases {
             controller.page = page
@@ -29,17 +34,27 @@ enum PreviewExporter {
         }
 
         controller.page = .dictation
-        let states: [(String, DictationPhase, DictationMode?, String, String?, Delivery?)] = [
-            ("dictation-listening", .recording(.pushToTalk), .pushToTalk, "Move the design review to Thursday, and loop in", nil, nil),
-            ("dictation-transcribing", .transcribing, .practice, phrase, nil, nil),
+        let states: [(String, DictationPhase, DictationMode?, String, String?, Delivery?, Bool)] = [
+            ("dictation-listening", .recording(.pushToTalk), .pushToTalk, "Move the design review to Thursday, and loop in", nil, nil, false),
+            ("dictation-transcribing", .transcribing, .practice, phrase, nil, nil, false),
+            ("dictation-polishing", .transcribing, .practice, "So move the design review to thursday and loop in the platform team before we lock the agenda",
+             nil, nil, true),
             ("dictation-done", .idle, nil, "", phrase,
-             Delivery(title: "Inserted into Notes", detail: "Clipboard restored", instruction: "Inserted · you decide when to send"))
+             Delivery(title: "Inserted into Notes", detail: "Polished · Natural", instruction: "Inserted · you decide when to send"), false)
         ]
-        for (name, phase, mode, live, transcript, delivered) in states {
+        for (name, phase, mode, live, transcript, delivered, polishing) in states {
             controller.applyPreview(phase: phase, mode: mode, levels: speech(), seconds: 4, transcript: transcript,
-                                    live: live, delivered: delivered, permissions: ready)
+                                    live: live, delivered: delivered, permissions: ready,
+                                    heard: transcript == nil ? nil : heard, outcome: transcript == nil ? nil : polished,
+                                    polishing: polishing)
             try render(PreviewRoot(controller: controller), size: window, to: directory.appendingPathComponent("\(name).png"))
         }
+        var fallback = polished
+        fallback.applied = .clean
+        fallback.text = "So move the design review to thursday and loop in the platform team before we lock the agenda."
+        fallback.note = "Apple Intelligence added a number you didn't say"
+        controller.applyPreview(phase: .idle, mode: nil, transcript: fallback.text, permissions: ready, heard: heard, outcome: fallback)
+        try render(PreviewRoot(controller: controller), size: window, to: directory.appendingPathComponent("dictation-fallback.png"))
         controller.applyPreview(phase: .idle, mode: nil, permissions: (false, false))
         try render(PreviewRoot(controller: controller), size: window, to: directory.appendingPathComponent("dictation-setup.png"))
         controller.applyPreview(phase: .idle, mode: nil, permissions: ready)
@@ -50,8 +65,9 @@ enum PreviewExporter {
             ("capsule-arming", .arming, "Opening your microphone · Esc to cancel"),
             ("capsule-listening", .listening, "Release ⌃ ⌥ Space to finish"),
             ("capsule-transcribing", .transcribing, "Transcribing offline · Esc to cancel"),
+            ("capsule-polishing", .polishing("Professional · on your Mac"), "Polishing on this Mac · Esc to cancel"),
             ("capsule-inserting", .inserting, "Inserting into your original app"),
-            ("capsule-done", .delivered(Delivery(title: "Inserted into Notes", detail: "Clipboard restored",
+            ("capsule-done", .delivered(Delivery(title: "Inserted into Mail", detail: "Polished · Professional",
                                                  instruction: "Inserted · you decide when to send")), "Inserted · you decide when to send"),
             ("capsule-attention", .attention(kind: .warning, title: "Your words are ready", id: UUID()), nil)
         ]
@@ -68,7 +84,7 @@ enum PreviewExporter {
                 }
             }
         }.padding(28).background(Palette.char), size: NSSize(width: 580, height: 120), to: directory.appendingPathComponent("marks.png"))
-        let glyphs: [BrandGlyph] = [.wave, .stack, .sliders, .mic, .lock, .download, .key, .check, .close, .rescan]
+        let glyphs: [BrandGlyph] = [.wave, .style, .stack, .sliders, .mic, .lock, .download, .key, .check, .close, .rescan]
         try render(VStack(spacing: 18) {
             ForEach([false, true], id: \.self) { on in
                 HStack(spacing: 22) {
@@ -79,7 +95,7 @@ enum PreviewExporter {
                     }
                 }
             }
-        }.padding(24).background(Palette.char), size: NSSize(width: 880, height: 200), to: directory.appendingPathComponent("icons.png"))
+        }.padding(24).background(Palette.char), size: NSSize(width: 928, height: 200), to: directory.appendingPathComponent("icons.png"))
         for (name, state, busy) in [("status-idle", MarkState.idle, false), ("status-listening", .listen, true), ("status-done", .check, true)] {
             try write(StatusGlyph.image(state: state, busy: busy, ready: true, levels: nil, time: 0), scale: 8,
                       to: directory.appendingPathComponent("\(name).png"))
@@ -103,6 +119,7 @@ enum PreviewExporter {
         let content: AnyView
         switch page {
         case .dictation: content = AnyView(DictationView(controller: controller, meter: controller.meter))
+        case .style: content = AnyView(StyleView(controller: controller, preview: controller.stylePreview))
         case .models: content = AnyView(ModelsView(controller: controller))
         case .settings: content = AnyView(SettingsView(controller: controller))
         }
@@ -159,6 +176,7 @@ enum PreviewExporter {
                         Group {
                             switch controller.page {
                             case .dictation: DictationView(controller: controller, meter: controller.meter)
+                            case .style: StyleView(controller: controller, preview: controller.stylePreview)
                             case .models: ModelsView(controller: controller)
                             case .settings: SettingsView(controller: controller)
                             }

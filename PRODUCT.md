@@ -32,6 +32,11 @@ Nemotron model, instead of downloading its own copies, and runs two local engine
   default and gated on verified insertion; clipboard restoration.
 - Discovery of compatible models on disk; one-click install of five small
   MIT-licensed Whisper models with pinned SHA-256 verification.
+- Style: Verbatim, Clean (rules: fillers, stutters, self-corrections,
+  capitals, punctuation), Polished, and Refined (a local language model), with
+  a tone per app context, a personal vocabulary, opt-in spoken punctuation, and
+  plain-language instructions. Polish reuses Apple Intelligence or Ollama models
+  already on the Mac, and every rewrite is checked against what was said.
 - Runs from the menu bar with a floating, non-focusing capsule.
 - macOS 14+, Apple Silicon. Not sandboxed (Accessibility insertion and model
   reuse). The release build is signed but not notarized.
@@ -48,6 +53,7 @@ state. Tagline: "A small model. A big voice." Voice: plain, warm, brief.
 1. Private by construction: audio never leaves the Mac.
 2. Reuse before download; never copy or modify other apps' models.
 3. Never type into the wrong place: verify focus and insertion before acting.
+   Never type the wrong words either: a model may tidy dictation, not answer it.
 4. Motion means sound: nothing animates unless something is listening or working.
 5. Explain every failure in plain language, with the recovery.
 

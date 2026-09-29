@@ -16,7 +16,11 @@ let package = Package(
             checksum: "a970006f256c8e689bc79e73f7fa7ddb8c1ed2703ad43ee48eb545b5bb6de6af"
         ),
         .target(name: "BigvoiceCore"),
-        .target(name: "BigvoiceRuntime", dependencies: ["BigvoiceCore", "whisper"]),
+        .target(
+            name: "BigvoiceRuntime", dependencies: ["BigvoiceCore", "whisper"],
+            // Apple's on-device model ships with macOS 26; weak linking keeps bigvoice launching on macOS 14 and 15.
+            linkerSettings: [.unsafeFlags(["-Xlinker", "-weak_framework", "-Xlinker", "FoundationModels"])]
+        ),
         .executableTarget(
             name: "Bigvoice",
             dependencies: ["BigvoiceCore", "BigvoiceRuntime"],
